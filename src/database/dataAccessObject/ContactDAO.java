@@ -9,17 +9,15 @@ import java.util.List;
 
 import database.ConnectDatabase;
 import database.databaseUtilities.DAOInterface;
-import entities.Produit;
+import entities.Contact;
 
-public class ProduitDAO implements DAOInterface<Produit> {
+public class ContactDAO implements DAOInterface<Contact> {
 
 	@Override
-	public List<Produit> listAll() {
-		// TODO Auto-generated method stub
+	public List<Contact> listAll() {
+		List<Contact> listContacts = new ArrayList<>();
 
-		List<Produit> listProduits = new ArrayList<>();
-
-		String query = "SELECT * from Produits";
+		String query = "SELECT * from Contact";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();
@@ -27,14 +25,14 @@ public class ProduitDAO implements DAOInterface<Produit> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int id = rs.getInt("id");
+				int rsId = rs.getInt("id");
 				String nom = rs.getString("nom");
-				String description = rs.getString("description");
-				String categorie = rs.getString("categorie");
-				String mesure = rs.getString("mesure");
-				float prixVenteActuel = rs.getFloat("prixVenteActuel");
+				String prenom = rs.getString("prenom");
+				String fonction = rs.getString("fonction");
+				String numTel = rs.getString("numTel");
+				String eMail = rs.getString("eMail");
 
-				listProduits.add(new Produit(id, prixVenteActuel, nom, description, categorie, mesure));
+				listContacts.add(new Contact(rsId, nom, prenom, fonction, numTel, eMail));
 			}
 
 		} catch (SQLException e) {
@@ -42,11 +40,11 @@ public class ProduitDAO implements DAOInterface<Produit> {
 		} finally {
 			ConnectDatabase.closeConnection();
 		}
-		return listProduits;
+		return listContacts;
 	}
 
 	@Override
-	public void insertInTable(Produit entity) {
+	public void insertInTable(Contact entity) {
 		// TODO Auto-generated method stub
 		String query = "INSERT ..." + entity.getValues();
 
@@ -62,10 +60,16 @@ public class ProduitDAO implements DAOInterface<Produit> {
 	}
 
 	@Override
-	public Produit getById(int id) {
+	public void modifyEntity(Contact entity) {
 		// TODO Auto-generated method stub
-		String query = "SELECT * FROM Produit WHERE id = \""+id+"\"";
-		Produit produit = null;
+		
+	}
+	
+	@Override
+	public Contact getById(int id) {
+		// TODO Auto-generated method stub
+		String query = "SELECT * FROM Contact WHERE id = "+ id;
+		Contact contact = null;
 		try {
 			Connection conn = ConnectDatabase.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(query);
@@ -74,30 +78,24 @@ public class ProduitDAO implements DAOInterface<Produit> {
 			// on part du principe que les identifiants sont uniques
 			int rsId = rs.getInt("id");
 			String nom = rs.getString("nom");
-			String description = rs.getString("description");
-			String categorie = rs.getString("categorie");
-			String mesure = rs.getString("mesure");
-			float prixVenteActuel = rs.getFloat("prixVenteActuel");
-			
-			produit = new Produit(rsId, prixVenteActuel, nom, description, categorie, mesure);
+			String prenom = rs.getString("prenom");
+			String fonction = rs.getString("fonction");
+			String numTel = rs.getString("numTel");
+			String eMail = rs.getString("eMail");
+			contact = new Contact(rsId, nom, prenom, fonction, numTel, eMail);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			ConnectDatabase.closeConnection();
 		}
-		return produit;
+		return contact;
 	}
 
 	@Override
-	public void modifyEntity(Produit entity) {
+	public void deleteEntity(Contact entity) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void deleteEntity(Produit entity) {
-		// TODO Auto-generated method stub
-		
-	}
 }

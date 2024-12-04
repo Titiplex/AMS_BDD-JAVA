@@ -5,21 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import database.ConnectDatabase;
 import database.databaseUtilities.DAOInterface;
-import entities.Produit;
+import entities.LotAchat;
 
-public class ProduitDAO implements DAOInterface<Produit> {
+public class LotAchatDAO implements DAOInterface<LotAchat> {
 
 	@Override
-	public List<Produit> listAll() {
-		// TODO Auto-generated method stub
+	public List<LotAchat> listAll() {
+		List<LotAchat> listLotAchats = new ArrayList<>();
 
-		List<Produit> listProduits = new ArrayList<>();
-
-		String query = "SELECT * from Produits";
+		String query = "SELECT * from LotAchat";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();
@@ -27,14 +26,13 @@ public class ProduitDAO implements DAOInterface<Produit> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int id = rs.getInt("id");
-				String nom = rs.getString("nom");
-				String description = rs.getString("description");
-				String categorie = rs.getString("categorie");
-				String mesure = rs.getString("mesure");
-				float prixVenteActuel = rs.getFloat("prixVenteActuel");
+				int rsId = rs.getInt("id");
+				int contratId = rs.getInt("contratId");
+				double quantite = rs.getDouble("quantite");
+				Date dateAchat = rs.getDate("dateAchat");
+				Date datePeremption = rs.getDate("datePeremption");
 
-				listProduits.add(new Produit(id, prixVenteActuel, nom, description, categorie, mesure));
+				listLotAchats.add(new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption));
 			}
 
 		} catch (SQLException e) {
@@ -42,12 +40,13 @@ public class ProduitDAO implements DAOInterface<Produit> {
 		} finally {
 			ConnectDatabase.closeConnection();
 		}
-		return listProduits;
+		return listLotAchats;
 	}
 
 	@Override
-	public void insertInTable(Produit entity) {
+	public void insertInTable(LotAchat entity) {
 		// TODO Auto-generated method stub
+		//Attention getValue de retourner numero de siret du fournisseur pour la table
 		String query = "INSERT ..." + entity.getValues();
 
 		try {
@@ -62,10 +61,17 @@ public class ProduitDAO implements DAOInterface<Produit> {
 	}
 
 	@Override
-	public Produit getById(int id) {
+	public void modifyEntity(LotAchat entity) {
 		// TODO Auto-generated method stub
-		String query = "SELECT * FROM Produit WHERE id = \""+id+"\"";
-		Produit produit = null;
+		
+	}
+	
+
+	@Override
+	public LotAchat getById(int id) {
+		// TODO Auto-generated method stub
+		String query = "SELECT * FROM LotAchat WHERE id = "+ id;
+		LotAchat lotAchat = null;
 		try {
 			Connection conn = ConnectDatabase.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(query);
@@ -73,31 +79,25 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
 			// on part du principe que les identifiants sont uniques
 			int rsId = rs.getInt("id");
-			String nom = rs.getString("nom");
-			String description = rs.getString("description");
-			String categorie = rs.getString("categorie");
-			String mesure = rs.getString("mesure");
-			float prixVenteActuel = rs.getFloat("prixVenteActuel");
+			int contratId = rs.getInt("contratId");
+			double quantite = rs.getDouble("quantite");
+			Date dateAchat = rs.getDate("dateAchat");
+			Date datePeremption = rs.getDate("datePeremption");
 			
-			produit = new Produit(rsId, prixVenteActuel, nom, description, categorie, mesure);
+			lotAchat = new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			ConnectDatabase.closeConnection();
 		}
-		return produit;
+		return lotAchat;
 	}
 
 	@Override
-	public void modifyEntity(Produit entity) {
+	public void deleteEntity(LotAchat entity) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void deleteEntity(Produit entity) {
-		// TODO Auto-generated method stub
-		
-	}
 }

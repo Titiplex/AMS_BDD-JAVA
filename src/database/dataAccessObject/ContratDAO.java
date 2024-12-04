@@ -5,21 +5,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import database.ConnectDatabase;
 import database.databaseUtilities.DAOInterface;
-import entities.Produit;
+import entities.Contrat;
 
-public class ProduitDAO implements DAOInterface<Produit> {
+public class ContratDAO implements DAOInterface<Contrat> {
+	
 
 	@Override
-	public List<Produit> listAll() {
-		// TODO Auto-generated method stub
+	public List<Contrat> listAll() {
+		List<Contrat> listContrats = new ArrayList<>();
 
-		List<Produit> listProduits = new ArrayList<>();
-
-		String query = "SELECT * from Produits";
+		String query = "SELECT * from Contrat";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();
@@ -27,14 +27,15 @@ public class ProduitDAO implements DAOInterface<Produit> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int id = rs.getInt("id");
-				String nom = rs.getString("nom");
-				String description = rs.getString("description");
-				String categorie = rs.getString("categorie");
-				String mesure = rs.getString("mesure");
-				float prixVenteActuel = rs.getFloat("prixVenteActuel");
+				int rsId = rs.getInt("id");
+				int fournisseurId = rs.getInt("fournisseurID");
+				int idProduit = rs.getInt("idProduit");
+				int quantiteMin = rs.getInt("quantiteMin");
+				Date dateDebut = rs.getDate("dateDebut");
+				Date dateFin = rs.getDate("dateFin");
+				double prixFixe = rs.getDouble("prixFixe");
 
-				listProduits.add(new Produit(id, prixVenteActuel, nom, description, categorie, mesure));
+				listContrats.add(new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe));
 			}
 
 		} catch (SQLException e) {
@@ -42,11 +43,11 @@ public class ProduitDAO implements DAOInterface<Produit> {
 		} finally {
 			ConnectDatabase.closeConnection();
 		}
-		return listProduits;
+		return listContrats;
 	}
 
 	@Override
-	public void insertInTable(Produit entity) {
+	public void insertInTable(Contrat entity) {
 		// TODO Auto-generated method stub
 		String query = "INSERT ..." + entity.getValues();
 
@@ -62,10 +63,16 @@ public class ProduitDAO implements DAOInterface<Produit> {
 	}
 
 	@Override
-	public Produit getById(int id) {
+	public void modifyEntity(Contrat entity) {
 		// TODO Auto-generated method stub
-		String query = "SELECT * FROM Produit WHERE id = \""+id+"\"";
-		Produit produit = null;
+		
+	}
+		
+	@Override
+	public Contrat getById(int id) {
+		// TODO Auto-generated method stub
+		String query = "SELECT * FROM Contrat WHERE id = " + id ;
+		Contrat contrat = null;
 		try {
 			Connection conn = ConnectDatabase.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(query);
@@ -73,31 +80,27 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
 			// on part du principe que les identifiants sont uniques
 			int rsId = rs.getInt("id");
-			String nom = rs.getString("nom");
-			String description = rs.getString("description");
-			String categorie = rs.getString("categorie");
-			String mesure = rs.getString("mesure");
-			float prixVenteActuel = rs.getFloat("prixVenteActuel");
+			int fournisseurId = rs.getInt("fournisseurID");
+			int idProduit = rs.getInt("idProduit");
+			int quantiteMin = rs.getInt("quantiteMin");
+			Date dateDebut = rs.getDate("dateDebut");
+			Date dateFin = rs.getDate("dateFin");
+			double prixFixe = rs.getDouble("prixFixe");
 			
-			produit = new Produit(rsId, prixVenteActuel, nom, description, categorie, mesure);
+			contrat= new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			ConnectDatabase.closeConnection();
 		}
-		return produit;
+		return contrat;
 	}
 
 	@Override
-	public void modifyEntity(Produit entity) {
+	public void deleteEntity(Contrat entity) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void deleteEntity(Produit entity) {
-		// TODO Auto-generated method stub
-		
-	}
 }
