@@ -16,7 +16,7 @@ public class TabStock implements TabTemplate {
 
 	@Override
 	public Node createTab() {
-	    VBox root = new VBox(20); // Conteneur principal vertical
+	    VBox root = new VBox(20);
 	    root.setStyle("-fx-padding: 10;");
 
 	    // Titre principal

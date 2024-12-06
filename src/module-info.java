@@ -6,4 +6,5 @@ module AMS.BDD.JAVA {
     requires transitive java.sql;
     requires org.postgresql.jdbc;
     requires javafx.base;
+    exports main;
 }

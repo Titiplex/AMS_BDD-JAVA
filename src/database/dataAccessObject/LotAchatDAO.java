@@ -18,7 +18,7 @@ public class LotAchatDAO implements DAOInterface<LotAchat> {
 	public List<LotAchat> listAll() {
 		List<LotAchat> listLotAchats = new ArrayList<>();
 
-		String query = "SELECT * from LotAchat";
+		String query = "SELECT * from ams_lotachat";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();

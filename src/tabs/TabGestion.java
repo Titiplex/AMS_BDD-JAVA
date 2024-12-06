@@ -3,16 +3,23 @@ package tabs;
 import java.util.List;
 
 import database.dataAccessObject.ContactDAO;
+import database.dataAccessObject.ContratDAO;
 import database.dataAccessObject.FournisseurDAO;
+import database.dataAccessObject.ProduitDAO;
 import entities.Contact;
+import entities.Contrat;
 import entities.Fournisseur;
+import entities.Produit;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import tabs.popup.ContactCreationPopup;
+import tabs.popup.ContratCreationPopup;
 
 public class TabGestion implements TabTemplate {
 
@@ -41,14 +48,14 @@ public class TabGestion implements TabTemplate {
 			@Override
 			public String toString(Fournisseur arg0) {
 				// TODO Auto-generated method stub
-				return arg0.getNomSociete();
+				return (arg0 == null) ? "" : arg0.getNomSociete();
 			}
 	    	
 	    });
 	    
 	    VBox fournisseurInfoBox = new VBox(10);
 	    fournisseurInfoBox.setStyle("-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1;");
-	    Label fournisseurInfoTitle = new Label("Informations sur le fournisseur");
+	    Label fournisseurInfoTitle = new Label("Information sur le fournisseur");
 	    fournisseurInfoTitle.setStyle("-fx-font-weight: bold;");
 	    
 	    // on recup les données dynamiquement pour les fournisseurs
@@ -76,19 +83,21 @@ public class TabGestion implements TabTemplate {
 	    ContactDAO contactDAO = new ContactDAO();
 	    List<Contact> listContacts = contactDAO.listAll();
 
-	    ListView<String> contactsListView = new ListView<>();
+	    contactsBox.getChildren().add(contactsTitle);
 	    listContacts.forEach(contact -> {
 	    	// A FAIRE ATTENTION, BOX AVEC LES INFOS EN POPUP ?
-	    	contactsListView.getItems().add(contact.getNom() + " " + contact.getPrenom() + " - ");
+			HBox hBox = new HBox(20);
+			hBox.getChildren().add(new Label(contact.getValues()));
+			contactsBox.getChildren().add(hBox);
 	    });
 
 	    Button addContactButton = new Button("Ajouter un contact");
 	    addContactButton.setOnAction(e -> {
-	        // Logique pour ajouter un contact
-	        // Ouvrir un dialogue ou une fenêtre modale pour saisir un nouveau contact
+	        // ouvrir popup pour ajouter contact
+			ContactCreationPopup contactPopup = new ContactCreationPopup();
 	    });
 
-	    contactsBox.getChildren().addAll(contactsTitle, contactsListView, addContactButton);
+	    contactsBox.getChildren().add(addContactButton);
 
 	    // Produits proposés
 	    VBox produitsBox = new VBox(10);
@@ -96,10 +105,16 @@ public class TabGestion implements TabTemplate {
 	    Label produitsTitle = new Label("Produits proposés");
 	    produitsTitle.setStyle("-fx-font-weight: bold;");
 
-	    ListView<String> produitsListView = new ListView<>();
-	    produitsListView.getItems().addAll("Produit A", "Produit B", "Produit C");
+		ProduitDAO produitDAO = new ProduitDAO();
+		List<Produit> listProduits = produitDAO.listAll();
 
-	    produitsBox.getChildren().addAll(produitsTitle, produitsListView);
+	    produitsBox.getChildren().add(produitsTitle);
+
+		for(Produit produit : listProduits) {
+			HBox hBox = new HBox(20);
+			hBox.getChildren().addAll(new Label(produit.getNom()), new Label(produit.getCategorie()));
+			produitsBox.getChildren().add(hBox);
+		}
 
 	    // Contrats passés
 	    VBox contratsBox = new VBox(10);
@@ -107,16 +122,28 @@ public class TabGestion implements TabTemplate {
 	    Label contratsTitle = new Label("Contrats passés");
 	    contratsTitle.setStyle("-fx-font-weight: bold;");
 
-	    ListView<String> contratsListView = new ListView<>();
-	    contratsListView.getItems().addAll("Contrat 1", "Contrat 2", "Contrat 3");
+		ContratDAO contratDAO = new ContratDAO();
+	    List<Contrat> contratList = contratDAO.listAll();
+
+		contratsBox.getChildren().add(contratsTitle);
+		for(Contrat contrat : contratList) {
+			HBox hBox = new HBox(20);
+			hBox.getChildren().addAll(new Label(contrat.getDateDebut().toString()),
+					new Label(contrat.getDateFin().toString()),
+					new Label(produitDAO.getById(contrat.getnumSiret()).getNom()),
+					new Label("" + contrat.getPrixFixe()),
+					new Label("" + contrat.getQuantiteMin()));
+
+			contratsBox.getChildren().add(hBox);
+		}
 
 	    Button addContratButton = new Button("Ajouter un contrat");
 	    addContratButton.setOnAction(e -> {
-	        // Logique pour ajouter un contrat
-	        // Ouvrir un formulaire pour saisir les informations du contrat
+	        // popup creation contrat
+			ContratCreationPopup contratPopup = new ContratCreationPopup();
 	    });
 
-	    contratsBox.getChildren().addAll(contratsTitle, contratsListView, addContratButton);
+	    contratsBox.getChildren().add(addContratButton);
 
 	    // Ajouter tout au conteneur principal
 	    root.getChildren().addAll(title, fournisseurComboBox, fournisseurInfoBox, contactsBox, produitsBox, contratsBox);

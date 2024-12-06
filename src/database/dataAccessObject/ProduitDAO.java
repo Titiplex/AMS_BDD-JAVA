@@ -19,7 +19,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
 		List<Produit> listProduits = new ArrayList<>();
 
-		String query = "SELECT * from Produits";
+		String query = "SELECT * from ams_produit";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();

@@ -5,8 +5,8 @@ import java.util.Properties;
 
 // Ma connection java à Postgresql est issu du travail de M.Morchid
 
-/**
- * Class that allows you to create a connection to postgresql database.
+/**Class that allows you to create a connection to postgresql database.
+ *
  */
 public class ConnectDatabase {
 

@@ -2,9 +2,9 @@ package database.databaseUtilities;
 
 public interface SetterInterface<O> {
 
-    /**Calls all sets of all attributs to modify the sql instance
+    /**Calls all sets of all attributes to modify the sql instance
      *
-     * @param object
+     * @param object an entity
      */
     void setter(O object);
 }

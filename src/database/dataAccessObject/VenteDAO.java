@@ -18,7 +18,7 @@ public class VenteDAO implements DAOInterface<Vente> {
 	public List<Vente> listAll() {
 		List<Vente> listVentes = new ArrayList<>();
 
-		String query = "SELECT * from Vente";
+		String query = "SELECT * from ams_vente";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();

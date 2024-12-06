@@ -19,7 +19,7 @@ public class ContratDAO implements DAOInterface<Contrat> {
 	public List<Contrat> listAll() {
 		List<Contrat> listContrats = new ArrayList<>();
 
-		String query = "SELECT * from Contrat";
+		String query = "SELECT * from ams_contrat";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();

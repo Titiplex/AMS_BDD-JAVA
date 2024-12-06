@@ -38,7 +38,7 @@ public class Main extends Application {
 
         Tab resultats 	= 	new Tab("Resultats", 	new TabResultats()	.createTab());
         Tab commandes 	= 	new Tab("Commandes", 	new TabCommandes()	.createTab());
-        Tab produits 	= 	new Tab("Produits", 	new TabProduits()	.createTab());
+        Tab produits 	= 	new Tab("Produits", 	    new TabProduits()	.createTab());
         Tab stock 		= 	new Tab("Stock", 		new TabStock()		.createTab());
         Tab gestion 	= 	new Tab("Gestion", 		new TabGestion()	.createTab());
         Tab ventes 		= 	new Tab("Ventes", 		new TabVentes()		.createTab());

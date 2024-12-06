@@ -17,7 +17,7 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 	public List<Fournisseur> listAll() {
 		List<Fournisseur> listFournisseurs = new ArrayList<>();
 
-		String query = "SELECT * from Fournisseur";
+		String query = "SELECT * from ams_fournisseur";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();
@@ -38,6 +38,7 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 		} finally {
 			ConnectDatabase.closeConnection();
 		}
+
 		return listFournisseurs;
 	}
 	@Override

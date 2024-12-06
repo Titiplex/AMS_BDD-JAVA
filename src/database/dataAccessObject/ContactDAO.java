@@ -17,7 +17,7 @@ public class ContactDAO implements DAOInterface<Contact> {
 	public List<Contact> listAll() {
 		List<Contact> listContacts = new ArrayList<>();
 
-		String query = "SELECT * from Contact";
+		String query = "SELECT * from ams_contact";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();
