@@ -9,9 +9,12 @@ import java.util.List;
 
 import database.ConnectDatabase;
 import database.databaseUtilities.DAOInterface;
+import database.databaseUtilities.JoinDAOInterface;
+import database.databaseUtilities.SqlEntity;
 import entities.Contact;
+import entities.Fournisseur;
 
-public class ContactDAO implements DAOInterface<Contact> {
+public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
 	@Override
 	public List<Contact> listAll() {
@@ -98,4 +101,38 @@ public class ContactDAO implements DAOInterface<Contact> {
 		
 	}
 
+	/**Selects Contacts associated with a Fournisseur
+	 *
+	 * @param joinEntity
+	 * @return
+	 */
+	@Override
+	public List<Contact> listAllFromJoin(Fournisseur joinEntity) {
+		List<Contact> listContacts = new ArrayList<>();
+
+		String query = "SELECT * from ams_fournisseur_contact join ams_contact using(idcontact) where idfournisseur=" + joinEntity.getNumSiret();
+
+		try {
+			Connection conn = ConnectDatabase.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				int rsId = rs.getInt("idcontact");
+				String nom = rs.getString("nom");
+				String prenom = rs.getString("prenom");
+				String fonction = rs.getString("fonction");
+				String numTel = rs.getString("tel");
+				String eMail = rs.getString("email");
+
+				listContacts.add(new Contact(rsId, nom, prenom, fonction, numTel, eMail));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectDatabase.closeConnection();
+		}
+		return listContacts;
+	}
 }
