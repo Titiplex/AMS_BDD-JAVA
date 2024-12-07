@@ -26,11 +26,11 @@ public class VenteDAO implements DAOInterface<Vente> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int id = rs.getInt("id");
-				int idLotAchat = rs.getInt("idLotAchat");
-				int prixDuMoment = rs.getInt("prixDuMoment");
-				Date dateAchat = rs.getDate("dateAchat");
-				int quantity = rs.getInt("quantity");
+				int id = rs.getInt("idvente");
+				int idLotAchat = rs.getInt("idlotachat");
+				int prixDuMoment = rs.getInt("prixdumoment");
+				Date dateAchat = rs.getDate("datevente");
+				int quantity = rs.getInt("quantite");
 
 				listVentes.add(new Vente(id, idLotAchat, prixDuMoment, dateAchat, quantity));
 			}

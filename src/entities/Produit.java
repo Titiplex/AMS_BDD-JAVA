@@ -27,16 +27,19 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
 			this.id = id;
 			validateProductName(nom);
 			this.prixVenteActuel = prixVenteActuel;
-			validateMesure(mesure);
+			//validateMesure(mesure);
 			this.mesure = mesure;
 			this.nom = nom;
 			this.description = description;
 			this.categorie = categorie;
 		} catch(ProductNameLengthException e) {
 			System.out.println("Erreur de construction : " + e.getMessage());
-		} catch (MesureTypeException e) {
+		}
+		/*
+		catch (MesureTypeException e) {
 			System.out.println("Erreur Achat : " + e.getMessage());
 		}
+		 */
 	}
 
 	public void setter(String nom, String description, String categorie, String mesure, float prixVenteActuel) {

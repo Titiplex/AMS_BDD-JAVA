@@ -27,13 +27,13 @@ public class ContratDAO implements DAOInterface<Contrat> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int rsId = rs.getInt("id");
-				int fournisseurId = rs.getInt("fournisseurID");
-				int idProduit = rs.getInt("idProduit");
-				int quantiteMin = rs.getInt("quantiteMin");
-				Date dateDebut = rs.getDate("dateDebut");
-				Date dateFin = rs.getDate("dateFin");
-				double prixFixe = rs.getDouble("prixFixe");
+				int rsId = rs.getInt("idcontrat");
+				int fournisseurId = rs.getInt("idfournisseur");
+				int idProduit = rs.getInt("idproduit");
+				int quantiteMin = rs.getInt("quantitemin");
+				Date dateDebut = rs.getDate("datedebut");
+				Date dateFin = rs.getDate("datefin");
+				double prixFixe = rs.getDouble("prixfixe");
 
 				listContrats.add(new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe));
 			}

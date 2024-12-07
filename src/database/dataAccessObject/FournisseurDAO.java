@@ -25,10 +25,10 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int numSiretRs = rs.getInt("numSiret");
-				String nomSociete = rs.getString("nomSociete");
+				int numSiretRs = rs.getInt("numsiret");
+				String nomSociete = rs.getString("nom_societe");
 				String adresse = rs.getString("adresse");
-				String eMailPrincipal = rs.getString("eMailPrincipal");
+				String eMailPrincipal = rs.getString("email");
 
 				listFournisseurs.add(new Fournisseur(nomSociete, numSiretRs, adresse, eMailPrincipal));
 			}

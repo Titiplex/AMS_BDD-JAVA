@@ -16,7 +16,7 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 	public List<Categorie> listAll() {
 		List<Categorie> listCategories = new ArrayList<>();
 
-		String query = "SELECT * from ams_categorie";
+		String query = "SELECT DISTINCT categorie from ams_produit_categorie";
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();

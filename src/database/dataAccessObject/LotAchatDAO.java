@@ -78,11 +78,11 @@ public class LotAchatDAO implements DAOInterface<LotAchat> {
 			ResultSet rs = stmt.executeQuery();
 
 			// on part du principe que les identifiants sont uniques
-			int rsId = rs.getInt("id");
-			int contratId = rs.getInt("contratId");
+			int rsId = rs.getInt("idlotachat");
+			int contratId = rs.getInt("idcontrat");
 			double quantite = rs.getDouble("quantite");
-			Date dateAchat = rs.getDate("dateAchat");
-			Date datePeremption = rs.getDate("datePeremption");
+			Date dateAchat = rs.getDate("dateachat");
+			Date datePeremption = rs.getDate("dateperemption");
 			
 			lotAchat = new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption);
 			

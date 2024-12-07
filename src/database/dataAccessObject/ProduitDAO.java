@@ -27,12 +27,12 @@ public class ProduitDAO implements DAOInterface<Produit> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int id = rs.getInt("id");
+				int id = rs.getInt("idproduit");
 				String nom = rs.getString("nom");
 				String description = rs.getString("description");
-				String categorie = rs.getString("categorie");
 				String mesure = rs.getString("mesure");
-				float prixVenteActuel = rs.getFloat("prixVenteActuel");
+				float prixVenteActuel = rs.getFloat("prixventeactuel");
+				String categorie = "test";
 
 				listProduits.add(new Produit(id, prixVenteActuel, nom, description, categorie, mesure));
 			}
@@ -64,22 +64,25 @@ public class ProduitDAO implements DAOInterface<Produit> {
 	@Override
 	public Produit getById(int id) {
 		// TODO Auto-generated method stub
-		String query = "SELECT * FROM Produit WHERE id = \""+id+"\"";
+		String query = "SELECT * FROM ams_produit WHERE idproduit = "+id;
 		Produit produit = null;
 		try {
 			Connection conn = ConnectDatabase.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
 
-			// on part du principe que les identifiants sont uniques
-			int rsId = rs.getInt("id");
-			String nom = rs.getString("nom");
-			String description = rs.getString("description");
-			String categorie = rs.getString("categorie");
-			String mesure = rs.getString("mesure");
-			float prixVenteActuel = rs.getFloat("prixVenteActuel");
-			
-			produit = new Produit(rsId, prixVenteActuel, nom, description, categorie, mesure);
+			if(rs.next()) {
+				// on part du principe que les identifiants sont uniques
+				int rsId = rs.getInt("idproduit");
+				String nom = rs.getString("nom");
+				String description = rs.getString("description");
+				String mesure = rs.getString("mesure");
+				float prixVenteActuel = rs.getFloat("prixventeactuel");
+
+				String categorie = "test";
+
+				produit = new Produit(rsId, prixVenteActuel, nom, description, categorie, mesure);
+			} else System.out.println("aucun produit avec l'id " + id);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

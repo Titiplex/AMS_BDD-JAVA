@@ -25,12 +25,12 @@ public class ContactDAO implements DAOInterface<Contact> {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				int rsId = rs.getInt("id");
+				int rsId = rs.getInt("idcontact");
 				String nom = rs.getString("nom");
 				String prenom = rs.getString("prenom");
 				String fonction = rs.getString("fonction");
-				String numTel = rs.getString("numTel");
-				String eMail = rs.getString("eMail");
+				String numTel = rs.getString("tel");
+				String eMail = rs.getString("email");
 
 				listContacts.add(new Contact(rsId, nom, prenom, fonction, numTel, eMail));
 			}

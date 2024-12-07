@@ -130,7 +130,7 @@ public class TabGestion implements TabTemplate {
 			HBox hBox = new HBox(20);
 			hBox.getChildren().addAll(new Label(contrat.getDateDebut().toString()),
 					new Label(contrat.getDateFin().toString()),
-					new Label(produitDAO.getById(contrat.getnumSiret()).getNom()),
+					new Label(produitDAO.getById(contrat.getIdProduit()).getNom()),
 					new Label("" + contrat.getPrixFixe()),
 					new Label("" + contrat.getQuantiteMin()));
 
