@@ -1,6 +1,6 @@
 package database.dataAccessObject;
 
-import database.ConnectDatabase;
+import database.databaseUtilities.ConnectDatabase;
 import database.databaseUtilities.DAOInterface;
 import entities.Produit;
 

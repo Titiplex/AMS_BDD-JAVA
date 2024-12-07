@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import database.ConnectDatabase;
+import database.databaseUtilities.ConnectDatabase;
 import database.databaseUtilities.DAOInterface;
 import entities.Contrat;
 

@@ -1,8 +1,8 @@
-package tabs;
+package tabs.tabUtilities;
 
 import javafx.scene.Node;
 
-interface TabTemplate {
+public interface TabTemplate {
 
 	/**Used to generate tabs for a javafx app
 	 *

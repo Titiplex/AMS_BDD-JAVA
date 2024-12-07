@@ -3,13 +3,12 @@ package tabs;
 import database.dataAccessObject.ContratDAO;
 import database.dataAccessObject.LotAchatDAO;
 import database.dataAccessObject.ProduitDAO;
-import database.dataAccessObject.VenteDAO;
 import entities.LotAchat;
-import entities.Vente;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import tabs.tabUtilities.TabTemplate;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

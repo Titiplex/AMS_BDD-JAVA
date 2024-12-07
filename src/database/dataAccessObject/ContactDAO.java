@@ -7,10 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import database.ConnectDatabase;
-import database.databaseUtilities.DAOInterface;
+import database.databaseUtilities.ConnectDatabase;
 import database.databaseUtilities.JoinDAOInterface;
-import database.databaseUtilities.SqlEntity;
 import entities.Contact;
 import entities.Fournisseur;
 

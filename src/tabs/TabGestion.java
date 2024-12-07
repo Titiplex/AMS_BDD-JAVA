@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import tabs.popup.ContactCreationPopup;
 import tabs.popup.ContratCreationPopup;
+import tabs.tabUtilities.TabTemplate;
 
 public class TabGestion implements TabTemplate {
 
