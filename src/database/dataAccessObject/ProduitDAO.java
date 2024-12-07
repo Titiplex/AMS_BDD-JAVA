@@ -1,15 +1,15 @@
 package database.dataAccessObject;
 
+import database.ConnectDatabase;
+import database.databaseUtilities.DAOInterface;
+import entities.Produit;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import database.ConnectDatabase;
-import database.databaseUtilities.DAOInterface;
-import entities.Produit;
 
 public class ProduitDAO implements DAOInterface<Produit> {
 

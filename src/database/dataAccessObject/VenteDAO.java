@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ public class VenteDAO implements DAOInterface<Vente> {
 				int id = rs.getInt("idvente");
 				int idLotAchat = rs.getInt("idlotachat");
 				int prixDuMoment = rs.getInt("prixdumoment");
-				Date dateAchat = rs.getDate("datevente");
+				LocalDate dateAchat = rs.getDate("datevente").toLocalDate();
 				int quantity = rs.getInt("quantite");
 
 				listVentes.add(new Vente(id, idLotAchat, prixDuMoment, dateAchat, quantity));
@@ -58,7 +59,7 @@ public class VenteDAO implements DAOInterface<Vente> {
 			int rsId = rs.getInt("id");
 			int idLot = rs.getInt("idLotAchat");
 			int prixDuMoment = rs.getInt("prixDuMoment");
-			Date dateAchat = rs.getDate("dateAchat");
+			LocalDate dateAchat = rs.getDate("dateAchat").toLocalDate();
 			int quantity = rs.getInt("quantity");
 			
 			vente = new Vente(rsId, idLot, prixDuMoment, dateAchat, quantity);

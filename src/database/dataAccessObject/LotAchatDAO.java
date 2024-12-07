@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,90 +15,92 @@ import entities.LotAchat;
 
 public class LotAchatDAO implements DAOInterface<LotAchat> {
 
-	@Override
-	public List<LotAchat> listAll() {
-		List<LotAchat> listLotAchats = new ArrayList<>();
+    @Override
+    public List<LotAchat> listAll() {
+        List<LotAchat> listLotAchats = new ArrayList<>();
 
-		String query = "SELECT * from ams_lotachat";
+        String query = "SELECT * from ams_lotachat";
 
-		try {
-			Connection conn = ConnectDatabase.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(query);
-			ResultSet rs = stmt.executeQuery();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
 
-			while(rs.next()) {
-				int rsId = rs.getInt("id");
-				int contratId = rs.getInt("contratId");
-				double quantite = rs.getDouble("quantite");
-				Date dateAchat = rs.getDate("dateAchat");
-				Date datePeremption = rs.getDate("datePeremption");
+            while (rs.next()) {
+                int rsId = rs.getInt("idlotachat");
+                int contratId = rs.getInt("idcontrat");
+                double quantite = rs.getDouble("quantite");
+                LocalDate dateAchat = rs.getDate("dateachat").toLocalDate();
+                LocalDate datePeremption = rs.getDate("dateperemption").toLocalDate();
 
-				listLotAchats.add(new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption));
-			}
+                listLotAchats.add(new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption));
+            }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			ConnectDatabase.closeConnection();
-		}
-		return listLotAchats;
-	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
+        return listLotAchats;
+    }
 
-	@Override
-	public void insertInTable(LotAchat entity) {
-		// TODO Auto-generated method stub
-		//Attention getValue de retourner numero de siret du fournisseur pour la table
-		String query = "INSERT ..." + entity.getValues();
+    @Override
+    public void insertInTable(LotAchat entity) {
+        // TODO Auto-generated method stub
+        //Attention getValue de retourner numero de siret du fournisseur pour la table
+        String query = "INSERT ..." + entity.getValues();
 
-		try {
-			Connection conn = ConnectDatabase.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(query);
-			stmt.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			ConnectDatabase.closeConnection();
-		}
-	}
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
+    }
 
-	@Override
-	public void modifyEntity(LotAchat entity) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    @Override
+    public void modifyEntity(LotAchat entity) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public LotAchat getById(int id) {
-		// TODO Auto-generated method stub
-		String query = "SELECT * FROM LotAchat WHERE id = "+ id;
-		LotAchat lotAchat = null;
-		try {
-			Connection conn = ConnectDatabase.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(query);
-			ResultSet rs = stmt.executeQuery();
+    }
 
-			// on part du principe que les identifiants sont uniques
-			int rsId = rs.getInt("idlotachat");
-			int contratId = rs.getInt("idcontrat");
-			double quantite = rs.getDouble("quantite");
-			Date dateAchat = rs.getDate("dateachat");
-			Date datePeremption = rs.getDate("dateperemption");
-			
-			lotAchat = new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			ConnectDatabase.closeConnection();
-		}
-		return lotAchat;
-	}
 
-	@Override
-	public void deleteEntity(LotAchat entity) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public LotAchat getById(int id) {
+        // TODO Auto-generated method stub
+        String query = "SELECT * FROM ams_lotachat WHERE idlotachat = " + id;
+        LotAchat lotAchat = null;
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // on part du principe que les identifiants sont uniques
+                int rsId = rs.getInt("idlotachat");
+                int contratId = rs.getInt("idcontrat");
+                double quantite = rs.getDouble("quantite");
+                LocalDate dateAchat = rs.getDate("dateachat").toLocalDate();
+                LocalDate datePeremption = rs.getDate("dateperemption").toLocalDate();
+
+                lotAchat = new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
+        return lotAchat;
+    }
+
+    @Override
+    public void deleteEntity(LotAchat entity) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

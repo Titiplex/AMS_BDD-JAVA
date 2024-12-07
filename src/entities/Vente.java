@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import database.databaseUtilities.SqlEntity;
@@ -7,9 +8,9 @@ import database.databaseUtilities.SqlEntity;
 public class Vente extends SqlEntity {
 
 	private int id, idLotAchat, prixDuMoment, quantity;
-	private Date dateAchat;
+	private LocalDate dateAchat;
 
-	public Vente(int id, int idLotAchat, int prixDuMoment, Date dateVente, int quantity) {
+	public Vente(int id, int idLotAchat, int prixDuMoment, LocalDate dateVente, int quantity) {
 		super();
 		this.id = id;
 		this.idLotAchat = idLotAchat;
@@ -30,7 +31,7 @@ public class Vente extends SqlEntity {
 		return prixDuMoment;
 	}
 
-	public Date getDateAchat() {
+	public LocalDate getDateAchat() {
 		return dateAchat;
 	}
 	

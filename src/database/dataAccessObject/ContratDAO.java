@@ -13,94 +13,96 @@ import database.databaseUtilities.DAOInterface;
 import entities.Contrat;
 
 public class ContratDAO implements DAOInterface<Contrat> {
-	
 
-	@Override
-	public List<Contrat> listAll() {
-		List<Contrat> listContrats = new ArrayList<>();
 
-		String query = "SELECT * from ams_contrat";
+    @Override
+    public List<Contrat> listAll() {
+        List<Contrat> listContrats = new ArrayList<>();
 
-		try {
-			Connection conn = ConnectDatabase.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(query);
-			ResultSet rs = stmt.executeQuery();
+        String query = "SELECT * from ams_contrat";
 
-			while(rs.next()) {
-				int rsId = rs.getInt("idcontrat");
-				int fournisseurId = rs.getInt("idfournisseur");
-				int idProduit = rs.getInt("idproduit");
-				int quantiteMin = rs.getInt("quantitemin");
-				Date dateDebut = rs.getDate("datedebut");
-				Date dateFin = rs.getDate("datefin");
-				double prixFixe = rs.getDouble("prixfixe");
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
 
-				listContrats.add(new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe));
-			}
+            while (rs.next()) {
+                int rsId = rs.getInt("idcontrat");
+                int fournisseurId = rs.getInt("idfournisseur");
+                int idProduit = rs.getInt("idproduit");
+                int quantiteMin = rs.getInt("quantitemin");
+                Date dateDebut = rs.getDate("datedebut");
+                Date dateFin = rs.getDate("datefin");
+                double prixFixe = rs.getDouble("prixfixe");
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			ConnectDatabase.closeConnection();
-		}
-		return listContrats;
-	}
+                listContrats.add(new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe));
+            }
 
-	@Override
-	public void insertInTable(Contrat entity) {
-		// TODO Auto-generated method stub
-		String query = "INSERT ..." + entity.getValues();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
+        return listContrats;
+    }
 
-		try {
-			Connection conn = ConnectDatabase.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(query);
-			stmt.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			ConnectDatabase.closeConnection();
-		}
-	}
+    @Override
+    public void insertInTable(Contrat entity) {
+        // TODO Auto-generated method stub
+        String query = "INSERT ..." + entity.getValues();
 
-	@Override
-	public void modifyEntity(Contrat entity) {
-		// TODO Auto-generated method stub
-		
-	}
-		
-	@Override
-	public Contrat getById(int id) {
-		// TODO Auto-generated method stub
-		String query = "SELECT * FROM Contrat WHERE id = " + id ;
-		Contrat contrat = null;
-		try {
-			Connection conn = ConnectDatabase.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(query);
-			ResultSet rs = stmt.executeQuery();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
+    }
 
-			// on part du principe que les identifiants sont uniques
-			int rsId = rs.getInt("id");
-			int fournisseurId = rs.getInt("fournisseurID");
-			int idProduit = rs.getInt("idProduit");
-			int quantiteMin = rs.getInt("quantiteMin");
-			Date dateDebut = rs.getDate("dateDebut");
-			Date dateFin = rs.getDate("dateFin");
-			double prixFixe = rs.getDouble("prixFixe");
-			
-			contrat= new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			ConnectDatabase.closeConnection();
-		}
-		return contrat;
-	}
+    @Override
+    public void modifyEntity(Contrat entity) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void deleteEntity(Contrat entity) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public Contrat getById(int id) {
+        // TODO Auto-generated method stub
+        String query = "SELECT * FROM ams_contrat WHERE idcontrat = " + id;
+        Contrat contrat = null;
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // on part du principe que les identifiants sont uniques
+                int rsId = rs.getInt("idcontrat");
+                int fournisseurId = rs.getInt("idfournisseur");
+                int idProduit = rs.getInt("idproduit");
+                int quantiteMin = rs.getInt("quantitemin");
+                Date dateDebut = rs.getDate("datedebut");
+                Date dateFin = rs.getDate("datefin");
+                double prixFixe = rs.getDouble("prixfixe");
+
+                contrat = new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
+        return contrat;
+    }
+
+    @Override
+    public void deleteEntity(Contrat entity) {
+        // TODO Auto-generated method stub
+
+    }
 
 }
