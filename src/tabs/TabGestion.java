@@ -143,7 +143,7 @@ public class TabGestion implements TabTemplate {
 			// on update la vbox des produits
 			for(Produit produit : listProduits) {
 				HBox hBox = new HBox(20);
-				hBox.getChildren().addAll(new Label(produit.getNom()), new Label(produit.getCategorie()));
+				hBox.getChildren().addAll(new Label(produit.getNom()));
 				produitsBox[0].getChildren().add(hBox);
 			}
 

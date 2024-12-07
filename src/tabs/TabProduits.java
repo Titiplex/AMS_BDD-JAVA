@@ -1,106 +1,176 @@
 package tabs;
 
+import database.dataAccessObject.CategorieDAO;
+import database.dataAccessObject.ContratDAO;
+import database.dataAccessObject.LotAchatDAO;
+import database.dataAccessObject.ProduitDAO;
+import entities.Categorie;
+import entities.Contrat;
+import entities.LotAchat;
+import entities.Produit;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
+
+import java.util.Comparator;
+import java.util.List;
+
+import static tabs.tabUtilities.TabUtilitiesMethodes.getRemainingLot;
 
 public class TabProduits implements TabTemplate {
 
-	@Override
-	public Node createTab() {
-	    VBox root = new VBox(20); // Conteneur principal vertical
-	    root.setStyle("-fx-padding: 10;");
+    @Override
+    public Node createTab() {
+        VBox root = new VBox(20); // Conteneur principal vertical
+        root.setStyle("-fx-padding: 10;");
+        ProduitDAO produitDAO = new ProduitDAO();
+        List<Produit> produitList = produitDAO.listAll();
 
-	    // Titre principal
-	    Label title = new Label("Liste complète des produits");
-	    title.setStyle("-fx-font-weight: bold; -fx-font-size: 16;");
+        Label title = new Label("Liste complète des produits");
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 16;");
 
-	    // Conteneur pour la liste des produits
-	    VBox produitsContainer = new VBox(10);
+        // Conteneur pour la liste des produits
+        VBox produitsContainer = new VBox(10);
 
-	    // Exemple de données pour les produits
-	    String[][] produits = {
-	        {"Produit A", "50.00€", "67.00€", "100"},
-	        {"Produit B", "30.00€", "40.20€", "50"},
-	        {"Produit C", "20.00€", "26.80€", "200"}
-	    };
+        // string des produits
+        String[][] produits = new String[produitList.size()][4];
 
-	    // Ajouter chaque produit avec les détails
-	    for (String[] produit : produits) {
-	        HBox produitRow = new HBox(20);
-	        produitRow.setStyle("-fx-padding: 5; -fx-border-color: lightgray; -fx-border-width: 1;");
+        for (int i = 0; i < produitList.size(); i++) {
+            Produit produit = produitList.get(i);
+            produits[i][0] = "" + produit.getId();
+            produits[i][1] = produit.getNom();
+            produits[i][2] = "" + calculatePrixMoyen(produit.getId());
+            produits[i][3] = "" + produit.getPrixVenteActuel();
+        }
 
-	        // Informations sur le produit
-	        VBox details = new VBox(5);
-	        details.getChildren().addAll(
-	            new Label("Nom : " + produit[0]),
-	            new Label("Prix d'achat moyen : " + produit[1]),
-	            new Label("Prix de vente : " + produit[2]),
-	            new Label("Quantité disponible : " + produit[3])
-	        );
+        // Ajouter chaque produit avec les détails
+        for (String[] produit : produits) {
+            HBox produitRow = new HBox(20);
+            produitRow.setStyle("-fx-padding: 5; -fx-border-color: lightgray; -fx-border-width: 1;");
 
-	        // Bouton pour afficher plus d'informations
-	        Button btnAfficher = new Button("Afficher");
-	        btnAfficher.setOnAction(e -> afficherDetailsProduit(produit[0]));
+            // Informations sur le produit
+            VBox details = new VBox(5);
+            details.getChildren().addAll(
+                    new Label("Nom : " + produit[1]),
+                    new Label("Prix d'achat moyen : " + produit[2]),
+                    new Label("Prix de vente : " + produit[3])
+            );
 
-	        // Ajouter les détails et le bouton au HBox
-	        produitRow.getChildren().addAll(details, btnAfficher);
-	        produitsContainer.getChildren().add(produitRow);
-	    }
+            // Bouton pour afficher plus d'informations
+            Button btnAfficher = new Button("Afficher");
+            btnAfficher.setOnAction(e -> afficherDetailsProduit(Integer.parseInt(produit[0])));
 
-	    // Formulaire pour ajouter un produit
-	    Label addProductTitle = new Label("Ajouter un nouveau produit");
-	    addProductTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+            // Ajouter les détails et le bouton au HBox
+            produitRow.getChildren().addAll(details, btnAfficher);
+            produitsContainer.getChildren().add(produitRow);
+        }
 
-	    HBox addProductForm = new HBox(10);
-	    TextField nomField = new TextField();
-	    nomField.setPromptText("Nom du produit");
-	    TextField prixAchatField = new TextField();
-	    prixAchatField.setPromptText("Prix d'achat");
-	    TextField prixVenteField = new TextField();
-	    prixVenteField.setPromptText("Prix de vente");
-	    TextField quantiteField = new TextField();
-	    quantiteField.setPromptText("Quantité");
-	    Button btnAjouter = new Button("Ajouter");
+        // ajout produit
+        Label addProductTitle = new Label("Ajouter un nouveau produit");
+        addProductTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
-	    // Gestionnaire d'événement pour le bouton d'ajout
-	    btnAjouter.setOnAction(e -> ajouterProduit(
-	        nomField.getText(),
-	        prixAchatField.getText(),
-	        prixVenteField.getText(),
-	        quantiteField.getText()
-	    ));
+        HBox addProductForm = new HBox(10);
+        TextField nom = new TextField();
+        nom.setPromptText("Nom du produit");
+        TextField description = new TextField();
+        description.setPromptText("Description");
+        TextField mesure = new TextField();
+        mesure.setPromptText("Mesure (U ou kg)");
+        TextField prixActuel = new TextField();
+        prixActuel.setPromptText("Prix de vente actuel");
 
-	    addProductForm.getChildren().addAll(nomField, prixAchatField, prixVenteField, quantiteField, btnAjouter);
+        // les categories
+        CategorieDAO categorieDAO = new CategorieDAO();
+        List<Categorie> categorieList = categorieDAO.listAll();
+        categorieList.sort(Comparator.comparing(Categorie::getCategorie));
 
-	    // Ajouter toutes les sections au conteneur principal
-	    root.getChildren().addAll(title, produitsContainer, addProductTitle, addProductForm);
+        ComboBox<Categorie> categorieComboBox = new ComboBox<>();
+        categorieComboBox.getItems().addAll(categorieList);
+        categorieComboBox.setConverter(new StringConverter<>() {
 
-	    return root;
-	}
+            @Override
+            public Categorie fromString(String arg0) {
+                return null;
+            }
 
-	// Méthodes d'exemple pour gérer les actions
-	private void afficherDetailsProduit(String produitNom) {
-	    // Exemple de données pour les descriptions et catégories
-	    String description = "Ceci est une description détaillée du produit " + produitNom;
-	    String categorie = "Catégorie de " + produitNom;
+            @Override
+            public String toString(Categorie arg0) {
+                return (arg0 == null) ? "" : arg0.getCategorie();
+            }
 
-	    // Afficher les détails dans une boîte de dialogue
-	    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	    alert.setTitle("Détails du produit");
-	    alert.setHeaderText(produitNom);
-	    alert.setContentText("Description : " + description + "\nCatégorie : " + categorie);
-	    alert.showAndWait();
-	}
+        });
 
-	private void ajouterProduit(String nom, String prixAchat, String prixVente, String quantite) {
-	    System.out.println("Produit ajouté : " + nom + " | Prix d'achat : " + prixAchat +
-	            " | Prix de vente : " + prixVente + " | Quantité : " + quantite);
-	}
+        Button btnAjouter = new Button("Ajouter");
 
+        // on ajoute
+        btnAjouter.setOnAction(e -> {
+            Produit produit = new Produit(
+                    // TODO récupérer l'id du produit après insertion
+                    1,
+                    Integer.parseInt(prixActuel.getText()),
+                    nom.getText(),
+                    description.getText(),
+                    mesure.getText()
+            );
+            produitDAO.insertInTable(produit);
+            categorieDAO.setTemporaryID(produit.getId());
+            categorieDAO.insertInTable(categorieComboBox.getValue());
+        });
 
+        addProductForm.getChildren().addAll(nom, description, mesure, prixActuel, categorieComboBox, btnAjouter);
+
+        // Ajouter toutes les sections au conteneur principal
+        root.getChildren().addAll(title, addProductForm, produitsContainer, addProductTitle);
+
+        return root;
+    }
+
+    /**
+     * Alert to display details of a product
+     *
+     * @param id
+     */
+    private void afficherDetailsProduit(int id) {
+
+        ProduitDAO produitDAO = new ProduitDAO();
+        CategorieDAO categorieDAO = new CategorieDAO();
+        Produit produit = produitDAO.getById(id);
+
+        Categorie categorie = categorieDAO.getById(id);
+
+        // Afficher les détails dans une boîte de dialogue
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Détails du produit");
+        alert.setHeaderText(produit.getNom());
+        alert.setContentText("Description : " + produit.getDescription() + "\nCatégorie : " + categorie.getCategorie());
+        alert.showAndWait();
+    }
+
+    /**
+     * Calculate the average price of a product (considering stock)
+     *
+     * @param produitId
+     * @return
+     */
+    private double calculatePrixMoyen(int produitId) {
+        LotAchatDAO lotAchatDAO = new LotAchatDAO();
+        ContratDAO contratDAO = new ContratDAO();
+
+        double numberOfProduct = 0, totalPriceOfProduct = 0;
+
+        List<LotAchat> lotAchatList = lotAchatDAO.listAll();
+        for (LotAchat lotAchat : lotAchatList) {
+            Contrat contrat = contratDAO.getById(lotAchat.getContratId());
+            if (contrat.getIdProduit() == produitId) {
+                double remaining = getRemainingLot(lotAchat);
+                numberOfProduct += remaining;
+                ;
+                totalPriceOfProduct += (remaining * contrat.getPrixFixe());
+            }
+        }
+        if (numberOfProduct == 0) return 0;
+        return totalPriceOfProduct / numberOfProduct;
+    }
 }

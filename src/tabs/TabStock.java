@@ -15,13 +15,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
-public class TabStock implements TabTemplate {
-    List<Vente> listVentes;
+import static tabs.tabUtilities.TabUtilitiesMethodes.getRemainingLot;
 
-    public TabStock() {
-        VenteDAO venteDAO = new VenteDAO();
-        listVentes = venteDAO.listAll();
-    }
+public class TabStock implements TabTemplate {
 
     @Override
     public Node createTab() {
@@ -75,27 +71,27 @@ public class TabStock implements TabTemplate {
             produitTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
             HBox lotsList = new HBox(5);
-			VBox dateList = new VBox(5);
-			VBox quantityList = new VBox(5);
+            VBox dateList = new VBox(5);
+            VBox quantityList = new VBox(5);
             Label dateHeader = new Label("Date d'échéance");
             Label quantityHeader = new Label("Quantité restante");
             dateList.getChildren().add(dateHeader);
-			quantityList.getChildren().add(quantityHeader);
+            quantityList.getChildren().add(quantityHeader);
 
             for (String[] lot : groupedLots.get(produit)) {
                 HBox lotDateRow = new HBox(20);
-				HBox lotQuantityRow = new HBox(20);
+                HBox lotQuantityRow = new HBox(20);
 
                 Label dateLabel = new Label(lot[1]);
                 Label quantityLabel = new Label(lot[2]);
 
                 lotDateRow.getChildren().add(dateLabel);
-				lotQuantityRow.getChildren().add(quantityLabel);
+                lotQuantityRow.getChildren().add(quantityLabel);
 
-				dateList.getChildren().add(lotDateRow);
-				quantityList.getChildren().add(lotQuantityRow);
+                dateList.getChildren().add(lotDateRow);
+                quantityList.getChildren().add(lotQuantityRow);
             }
-			lotsList.getChildren().addAll(dateList, quantityList);
+            lotsList.getChildren().addAll(dateList, quantityList);
 
             produitSection.getChildren().addAll(produitTitle, lotsList);
             lotsContainer.getChildren().add(produitSection);
@@ -105,15 +101,5 @@ public class TabStock implements TabTemplate {
         root.getChildren().addAll(title, lotsContainer);
 
         return root;
-    }
-
-    private double getRemainingLot(LotAchat lot) {
-        double totalNumber = lot.getQuantite();
-        for (Vente vente : listVentes) {
-            if (vente.getIdLotAchat() == lot.getId()) {
-                totalNumber -= vente.getQuantity();
-            }
-        }
-        return totalNumber;
     }
 }

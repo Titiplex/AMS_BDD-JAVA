@@ -32,9 +32,8 @@ public class ProduitDAO implements DAOInterface<Produit> {
 				String description = rs.getString("description");
 				String mesure = rs.getString("mesure");
 				float prixVenteActuel = rs.getFloat("prixventeactuel");
-				String categorie = "test";
 
-				listProduits.add(new Produit(id, prixVenteActuel, nom, description, categorie, mesure));
+				listProduits.add(new Produit(id, prixVenteActuel, nom, description, mesure));
 			}
 
 		} catch (SQLException e) {
@@ -48,7 +47,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
 	@Override
 	public void insertInTable(Produit entity) {
 		// TODO Auto-generated method stub
-		String query = "INSERT ..." + entity.getValues();
+		String query = "INSERT INTO ams_produit values " + entity.getValues();
 
 		try {
 			Connection conn = ConnectDatabase.getConnection();
@@ -79,9 +78,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
 				String mesure = rs.getString("mesure");
 				float prixVenteActuel = rs.getFloat("prixventeactuel");
 
-				String categorie = "test";
-
-				produit = new Produit(rsId, prixVenteActuel, nom, description, categorie, mesure);
+				produit = new Produit(rsId, prixVenteActuel, nom, description, mesure);
 			} else System.out.println("aucun produit avec l'id " + id);
 			
 		} catch (SQLException e) {

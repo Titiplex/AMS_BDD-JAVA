@@ -12,6 +12,12 @@ import database.databaseUtilities.DAOInterface;
 import entities.Categorie;
 
 public class CategorieDAO implements DAOInterface<Categorie> {
+	private int temporaryID;
+
+	public void setTemporaryID(int temporaryID) {
+		this.temporaryID = temporaryID;
+	}
+
 	@Override
 	public List<Categorie> listAll() {
 		List<Categorie> listCategories = new ArrayList<>();
@@ -40,7 +46,6 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 	@Override
 	public void insertInTable(Categorie entity) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -50,8 +55,24 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 
 	@Override
 	public Categorie getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		String query = "SELECT categorie from ams_produit_categorie WHERE idproduit = " + id;
+
+		Categorie categorie = null;
+		try {
+			Connection conn = ConnectDatabase.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+
+			if(rs.next()) {
+				categorie  = new Categorie(rs.getString("categorie"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectDatabase.closeConnection();
+		}
+		return categorie;
 	}
 
 	@Override
