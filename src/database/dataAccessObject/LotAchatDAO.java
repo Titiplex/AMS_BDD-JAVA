@@ -1,5 +1,9 @@
 package database.dataAccessObject;
 
+import database.databaseUtilities.ConnectDatabase;
+import database.databaseUtilities.DAOInterface;
+import entities.LotAchat;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,10 +11,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import database.databaseUtilities.ConnectDatabase;
-import database.databaseUtilities.DAOInterface;
-import entities.LotAchat;
 
 public class LotAchatDAO implements DAOInterface<LotAchat> {
 
@@ -45,14 +45,18 @@ public class LotAchatDAO implements DAOInterface<LotAchat> {
 
     @Override
     public void insertInTable(LotAchat entity) {
-        // TODO Auto-generated method stub
-        //Attention getValue de retourner numero de siret du fournisseur pour la table
-        String query = "INSERT ..." + entity.getValues();
-
+        String query = "INSERT INTO ams_lotachat (idcontrat, quantite, dateachat, dateperemption) VALUES " + entity.getValues();
+        String queryID = "SELECT idlotachat FROM ams_lotachat WHERE idcontrat = " + entity.getContratId()
+                + " AND quantite = " + entity.getQuantite()
+                + " AND dateachat = '" + entity.getDateAchat() + "'"
+                + " AND dateperemption = '" + entity.getDatePeremption() + "'";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.executeQuery();
+            stmt = conn.prepareStatement(queryID);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) entity.setId(rs.getInt("idlotachat"));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -62,14 +66,25 @@ public class LotAchatDAO implements DAOInterface<LotAchat> {
 
     @Override
     public void modifyEntity(LotAchat entity) {
-        // TODO Auto-generated method stub
-
+		String query = "UPDATE ams_lotachat SET idcontrat = " + entity.getContratId()
+                + ", quantite = " + entity.getQuantite()
+                + ", dateachat = '" + entity.getDateAchat() + "'"
+                + ", dateperemption = '" + entity.getDatePeremption() + "'"
+                + " WHERE idlotachat = " + entity.getId();
+        try{
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
 
 
     @Override
     public LotAchat getById(int id) {
-        // TODO Auto-generated method stub
         String query = "SELECT * FROM ams_lotachat WHERE idlotachat = " + id;
         LotAchat lotAchat = null;
         try {
@@ -98,8 +113,15 @@ public class LotAchatDAO implements DAOInterface<LotAchat> {
 
     @Override
     public void deleteEntity(LotAchat entity) {
-        // TODO Auto-generated method stub
-
+		String query = "DELETE FROM ams_lotachat WHERE idlotachat = " + entity.getId();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
-
 }

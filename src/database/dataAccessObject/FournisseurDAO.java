@@ -44,13 +44,18 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 
     @Override
     public void insertInTable(Fournisseur entity) {
-        // TODO Auto-generated method stub
-        String query = "INSERT ..." + entity.getValues();
-
+        String query = "INSERT INTO ams_fournisseur (numsiret, nom_societe, adresse, email) VALUES " + entity.getValues();
+        String queryID = "SELECT idlotachat FROM ams_lotachat WHERE numsiret = " + entity.getNumSiret()
+                + " AND adresse = '" + entity.getAdresse() + "'"
+                + " AND nom_societe = '" + entity.getNomSociete() + "'"
+                + " AND email = '" + entity.geteMailPrincipal() + "'";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.executeQuery();
+            stmt = conn.prepareStatement(queryID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) entity.setNumSiret(rs.getInt("numsiret"));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -88,14 +93,33 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 
     @Override
     public void deleteEntity(Fournisseur entity) {
-        // TODO Auto-generated method stub
-
+        String query = "DELETE FROM ams_fournisseur WHERE idlotachat = " + entity.getNumSiret();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
 
     @Override
     public void modifyEntity(Fournisseur entity) {
-        // TODO Auto-generated method stub
-
+        String query = "UPDATE ams_lotachat SET numsiret = " + entity.getNumSiret()
+                + " AND adresse = '" + entity.getAdresse() + "'"
+                + " AND nom_societe = '" + entity.getNomSociete() + "'"
+                + " AND email = '" + entity.geteMailPrincipal() + "'"
+                + " WHERE numsiret = " + entity.getNumSiret();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
-
 }

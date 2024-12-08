@@ -1,10 +1,8 @@
 package tabs.popup;
 
-import database.dataAccessObject.ContactDAO;
 import database.dataAccessObject.ContratDAO;
 import database.dataAccessObject.FournisseurDAO;
 import database.dataAccessObject.ProduitDAO;
-import entities.Contact;
 import entities.Contrat;
 import entities.Fournisseur;
 import entities.Produit;
@@ -16,12 +14,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ContratCreationPopup {
     public ContratCreationPopup() {
-        // Créer une fenêtre modale pour ajouter un contrat
+        // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Ajouter un Contact");
@@ -89,11 +87,11 @@ public class ContratCreationPopup {
 
         });
 
-        // Bouton pour enregistrer
+        // enregistrer
         Button saveButton = new Button("Enregistrer");
         saveButton.setOnAction(saveEvent -> {
-            Date startDate = new Date(startDatePicker.getValue().toString());
-            Date endDate = new Date(endDatePicker.getValue().toString());
+            LocalDate startDate = startDatePicker.getValue();
+            LocalDate endDate = endDatePicker.getValue();
             String quantiteMin = quantiteMinField.getText();
             String prixFixe = prixFixeField.getText();
             int numSiret = fournisseurComboBox.getValue().getNumSiret();
@@ -114,18 +112,16 @@ public class ContratCreationPopup {
             popupStage.close(); // Fermer la fenêtre popup
         });
 
-        // Bouton pour annuler
+        // annuler
         Button cancelButton = new Button("Annuler");
         cancelButton.setOnAction(cancelEvent -> popupStage.close());
 
-        // Layout pour les boutons
         HBox buttonBox = new HBox(10, saveButton, cancelButton);
         buttonBox.setStyle("-fx-alignment: center;");
 
-        // Ajouter les éléments au conteneur principal
         popupRoot.getChildren().addAll(startDateLabel, startDatePicker, endDateLabel, endDatePicker, quantiteMinLabel, quantiteMinField, prixFixeLabel, prixFixeField, fournisseurComboBox, produitComboBox, buttonBox);
 
-        // Afficher la fenêtre popup
+        // afficher
         Scene popupScene = new Scene(popupRoot, 300, 300);
         popupStage.setScene(popupScene);
         popupStage.showAndWait();

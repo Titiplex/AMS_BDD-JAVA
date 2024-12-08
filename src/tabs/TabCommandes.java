@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import tabs.popup.UpdateLotAchatPopup;
 import tabs.tabUtilities.TabTemplate;
 
 import java.time.LocalDate;
@@ -47,7 +48,7 @@ public class TabCommandes implements TabTemplate {
         ContratDAO contratDAO = new ContratDAO();
         FournisseurDAO fournisseurDAO = new FournisseurDAO();
         List<LotAchat> lotAchatList = lotAchatDAO.listAll();
-        String[][] commandes = new String[lotAchatList.size()][5];
+        String[][] commandes = new String[lotAchatList.size()][6];
         LocalDate today = LocalDate.now();
 
         for (int i = 0; i < lotAchatList.size(); i++) {
@@ -63,6 +64,7 @@ public class TabCommandes implements TabTemplate {
                 commandes[i][2] = "" + lot.getQuantite();
                 commandes[i][3] = "" + (produit.getPrixVenteActuel() * lot.getQuantite());
                 commandes[i][4] = fournisseur.getNomSociete();
+                commandes[i][5] = "" + lot.getId();
             }
         }
 
@@ -82,15 +84,13 @@ public class TabCommandes implements TabTemplate {
 
             // boutons d'actions
             Button btnSupprimer = new Button("Supprimer");
-            Button btnReporter = new Button("Reporter");
             Button btnModifier = new Button("Modifier");
 
-            btnSupprimer.setOnAction(e -> supprimerCommande(commande[0]));
-            btnReporter.setOnAction(e -> reporterCommande(commande[0]));
-            btnModifier.setOnAction(e -> modifierCommande(commande[0]));
+            btnSupprimer.setOnAction(e -> supprimerCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
+            btnModifier.setOnAction(e -> modifierCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
 
             VBox actions = new VBox(5);
-            actions.getChildren().addAll(btnSupprimer, btnReporter, btnModifier);
+            actions.getChildren().addAll(btnModifier, btnSupprimer);
 
             // ajout final des lignes de commande
             commandeRow.getChildren().addAll(details, actions);
@@ -188,19 +188,20 @@ public class TabCommandes implements TabTemplate {
         return root;
     }
 
-    private void supprimerCommande(String produit) {
-        System.out.println("Commande supprimée : " + produit);
+    private void supprimerCommande(LotAchat lot) {
+        LotAchatDAO lotAchatDAO = new LotAchatDAO();
+        lotAchatDAO.deleteEntity(lot);
+        // TODO regen
     }
 
-    private void reporterCommande(String produit) {
-        System.out.println("Commande reportée : " + produit);
-    }
-
-    private void modifierCommande(String produit) {
-        System.out.println("Modification de la commande : " + produit);
+    private void modifierCommande(LotAchat lot) {
+        new UpdateLotAchatPopup(lot);
     }
 
     private void ajouterCommande(Contrat contrat, double quantite, double min, LocalDate dateAchat, LocalDate datePeremption) throws LotAchatQuantityException {
-        if(quantite < min) throw new LotAchatQuantityException(contrat, min);
+        if (quantite < min) throw new LotAchatQuantityException(contrat, min);
+        LotAchatDAO lotAchatDAO = new LotAchatDAO();
+        lotAchatDAO.insertInTable(new LotAchat(1, contrat.getId(), quantite, dateAchat, datePeremption));
+        // TODO regénérer la fenêtre pour update le contenu
     }
 }

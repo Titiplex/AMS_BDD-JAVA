@@ -1,16 +1,16 @@
 package database.dataAccessObject;
 
+import database.databaseUtilities.ConnectDatabase;
+import database.databaseUtilities.JoinDAOInterface;
+import entities.Contact;
+import entities.Fournisseur;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import database.databaseUtilities.ConnectDatabase;
-import database.databaseUtilities.JoinDAOInterface;
-import entities.Contact;
-import entities.Fournisseur;
 
 public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
@@ -46,13 +46,19 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
     @Override
     public void insertInTable(Contact entity) {
-        // TODO Auto-generated method stub
-        String query = "INSERT ..." + entity.getValues();
-
+        String query = "INSERT INTO ams_contact (nom, prenom, fonction, tel, email) VALUES " + entity.getValues();
+        String queryID = "SELECT idlotachat FROM ams_contact WHERE nom = '" + entity.getNom() + "'"
+                + " AND prenom = '" + entity.getPrenom() + "'"
+                + " AND fonction = '" + entity.getFonction() + "'"
+                + " AND tel = '" + entity.getNumTel() + "'"
+                + "AND email = '" + entity.geteMail() + "'";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.executeQuery();
+            stmt = conn.prepareStatement(queryID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) entity.setId(rs.getInt("idcontact"));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -62,8 +68,21 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
     @Override
     public void modifyEntity(Contact entity) {
-        // TODO Auto-generated method stub
-
+        String query = "UPDATE ams_lotachat SET nom = '" + entity.getNom() + "'"
+                + " AND prenom = '" + entity.getPrenom() + "'"
+                + " AND fonction = '" + entity.getFonction() + "'"
+                + " AND tel = '" + entity.getNumTel() + "'"
+                + "AND email = '" + entity.geteMail() + "'"
+                + " WHERE idcontact = " + entity.getId();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
 
     @Override
@@ -95,8 +114,16 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
     @Override
     public void deleteEntity(Contact entity) {
-        // TODO Auto-generated method stub
-
+        String query = "DELETE FROM ams_contact WHERE idcontact = " + entity.getId();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
 
     /**

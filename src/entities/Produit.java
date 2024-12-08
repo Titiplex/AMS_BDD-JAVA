@@ -116,14 +116,17 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
             throw new MesureTypeException("Mesure \"" + mesure + "\" du produit incompatible !");
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public void getStruct() {
 
         super.getStruct("Produit");
 
         // doubler les apostrophes pour éviter les pb de sql
-        this.values = "(" +
-                this.id + ", '" +
+        this.values = "('" +
                 this.nom.replace("'", "''") + "', " +
 				this.prixVenteActuel + ", '" +
                 this.mesure.replace("'", "''") + "', '" +

@@ -38,7 +38,11 @@ public class Vente extends SqlEntity {
 	public int getQuantity() {
 		return quantity;
 	}
-	
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	@Override
 	public void getStruct() {
 		
@@ -46,7 +50,6 @@ public class Vente extends SqlEntity {
 
 		// doubler les apostrophes pour éviter les pb de sql
 		this.values = "(" +
-				this.id+ ", " + 
 				this.idLotAchat + ", '" + 
 				this.prixDuMoment + ", '" + 
 				this.quantity + ", '" + 

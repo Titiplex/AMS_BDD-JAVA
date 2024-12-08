@@ -1,16 +1,16 @@
 package database.dataAccessObject;
 
+import database.databaseUtilities.ConnectDatabase;
+import database.databaseUtilities.DAOInterface;
+import entities.Contrat;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import database.databaseUtilities.ConnectDatabase;
-import database.databaseUtilities.DAOInterface;
-import entities.Contrat;
 
 public class ContratDAO implements DAOInterface<Contrat> {
 
@@ -31,8 +31,8 @@ public class ContratDAO implements DAOInterface<Contrat> {
                 int fournisseurId = rs.getInt("idfournisseur");
                 int idProduit = rs.getInt("idproduit");
                 int quantiteMin = rs.getInt("quantitemin");
-                Date dateDebut = rs.getDate("datedebut");
-                Date dateFin = rs.getDate("datefin");
+                LocalDate dateDebut = rs.getDate("datedebut").toLocalDate();
+                LocalDate dateFin = rs.getDate("datefin").toLocalDate();
                 double prixFixe = rs.getDouble("prixfixe");
 
                 listContrats.add(new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe));
@@ -48,13 +48,20 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
     @Override
     public void insertInTable(Contrat entity) {
-        // TODO Auto-generated method stub
-        String query = "INSERT ..." + entity.getValues();
-
+        String query = "INSERT INTO ams_contrat (idfournisseur, idproduit, quantitemin, datedebut, datefin, prixfixe) VALUES " + entity.getValues();
+        String queryID = "SELECT idlotachat FROM ams_contrat WHERE idfournisseur = " + entity.getnumSiret()
+                + " AND idproduit = " + entity.getIdProduit()
+                + " AND quantitemin" + entity.getQuantiteMin()
+                + " AND datedebut = '" + entity.getDateDebut() + "'"
+                + " AND datefin = '" + entity.getDateFin() + "'"
+                + "AND prixfixe = " + entity.getPrixFixe();
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.executeQuery();
+            stmt = conn.prepareStatement(queryID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) entity.setId(rs.getInt("idcontrat"));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -64,8 +71,22 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
     @Override
     public void modifyEntity(Contrat entity) {
-        // TODO Auto-generated method stub
-
+        String query = "UPDATE ams_lotachat SET idfournisseur = " + entity.getnumSiret()
+                + " AND idproduit = " + entity.getIdProduit()
+                + " AND quantitemin" + entity.getQuantiteMin()
+                + " AND datedebut = '" + entity.getDateDebut() + "'"
+                + " AND datefin = '" + entity.getDateFin() + "'"
+                + "AND prixfixe = " + entity.getPrixFixe()
+                + " WHERE idcontrat = " + entity.getId();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
 
     @Override
@@ -84,8 +105,8 @@ public class ContratDAO implements DAOInterface<Contrat> {
                 int fournisseurId = rs.getInt("idfournisseur");
                 int idProduit = rs.getInt("idproduit");
                 int quantiteMin = rs.getInt("quantitemin");
-                Date dateDebut = rs.getDate("datedebut");
-                Date dateFin = rs.getDate("datefin");
+                LocalDate dateDebut = rs.getDate("datedebut").toLocalDate();
+                LocalDate dateFin = rs.getDate("datefin").toLocalDate();
                 double prixFixe = rs.getDouble("prixfixe");
 
                 contrat = new Contrat(rsId, fournisseurId, idProduit, quantiteMin, dateDebut, dateFin, prixFixe);
@@ -101,8 +122,16 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
     @Override
     public void deleteEntity(Contrat entity) {
-        // TODO Auto-generated method stub
-
+        String query = "DELETE FROM ams_contrat WHERE idcontrat = " + entity.getId();
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
     }
 
 }

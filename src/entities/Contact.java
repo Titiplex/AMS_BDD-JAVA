@@ -9,6 +9,10 @@ public class Contact extends SqlEntity {
 	private int id;
 	private String nom, prenom, fonction, numTel, eMail;
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	/**Constructor for a Contact.
 	 * 
 	 * @param id

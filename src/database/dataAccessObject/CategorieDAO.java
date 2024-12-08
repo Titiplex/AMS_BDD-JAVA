@@ -14,6 +14,8 @@ import entities.Categorie;
 public class CategorieDAO implements DAOInterface<Categorie> {
 	private int temporaryID;
 
+	// TODO revoir cette classe, pas clair ce que l'on fait avec
+
 	public void setTemporaryID(int temporaryID) {
 		this.temporaryID = temporaryID;
 	}

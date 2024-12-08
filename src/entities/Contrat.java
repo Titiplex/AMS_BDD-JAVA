@@ -28,6 +28,10 @@ public class Contrat extends SqlEntity {
         return numSiret;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getIdProduit() {
         return idProduit;
     }
