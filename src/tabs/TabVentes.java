@@ -16,6 +16,7 @@ public class TabVentes implements TabTemplate {
 
 	@Override
 	public Node createTab() {
+		// TODO
 	    VBox root = new VBox(20); // Conteneur principal vertical
 	    root.setStyle("-fx-padding: 10;");
 

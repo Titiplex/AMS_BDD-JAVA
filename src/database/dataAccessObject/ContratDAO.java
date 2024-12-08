@@ -91,7 +91,6 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
     @Override
     public Contrat getById(int id) {
-        // TODO Auto-generated method stub
         String query = "SELECT * FROM ams_contrat WHERE idcontrat = " + id;
         Contrat contrat = null;
         try {

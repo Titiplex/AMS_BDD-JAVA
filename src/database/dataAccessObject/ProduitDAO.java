@@ -15,8 +15,6 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
     @Override
     public List<Produit> listAll() {
-        // TODO Auto-generated method stub
-
         List<Produit> listProduits = new ArrayList<>();
 
         String query = "SELECT * from ams_produit";

@@ -26,7 +26,6 @@ public class ConnectDatabase {
         try {
             ConnectDatabase.conn = DriverManager.getConnection(URL, props);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return ConnectDatabase.conn;

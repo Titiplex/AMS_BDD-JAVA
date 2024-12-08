@@ -65,7 +65,6 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 
     @Override
     public Fournisseur getById(int numSiret) {
-        // TODO Auto-generated method stub
         String query = "SELECT * FROM ams_fournisseur WHERE numsiret = " + numSiret;
         Fournisseur fournisseur = null;
         try {

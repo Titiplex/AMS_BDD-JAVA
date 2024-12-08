@@ -46,7 +46,6 @@ public class VenteDAO implements DAOInterface<Vente> {
 
     @Override
     public Vente getById(int id) {
-        // TODO Auto-generated method stub
         String query = "SELECT * FROM Vente WHERE id = " + id;
         Vente vente = null;
         try {

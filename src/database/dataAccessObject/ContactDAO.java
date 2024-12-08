@@ -87,7 +87,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
     @Override
     public Contact getById(int id) {
-        // TODO Auto-generated method stub
         String query = "SELECT * FROM Contact WHERE id = " + id;
         Contact contact = null;
         try {
