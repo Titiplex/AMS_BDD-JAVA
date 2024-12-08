@@ -21,7 +21,7 @@ public class Main extends Application {
         primaryStage.setTitle("Application AMS");
         primaryStage.setOnCloseRequest(e -> Platform.exit());
 
-        // Barre de menu
+        // menu
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("Application de l'entreprise de détail");
         MenuItem menuItemExit = new MenuItem("Quitter");
@@ -29,7 +29,7 @@ public class Main extends Application {
         menuFile.getItems().add(menuItemExit);
         menuBar.getMenus().add(menuFile);
 
-        // Création des onglets
+        // onglets
         TabPane tabPane = new TabPane();
 
         Tab resultats = new Tab("Resultats", new TabResultats().createTab());
@@ -42,7 +42,7 @@ public class Main extends Application {
 
         tabPane.getTabs().addAll(resultats, commandes, produits, stock, gestion, ventes);
 
-        // Mise en page
+        // on ajoute à la scène finale
         VBox vbox = new VBox(menuBar, tabPane);
         Scene scene = new Scene(vbox, 1280, 720);
         primaryStage.setScene(scene);

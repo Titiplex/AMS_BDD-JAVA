@@ -1,15 +1,25 @@
 package tabs;
 
+import database.dataAccessObject.ContratDAO;
+import database.dataAccessObject.FournisseurDAO;
+import database.dataAccessObject.LotAchatDAO;
+import database.dataAccessObject.ProduitDAO;
+import entities.Contrat;
+import entities.Fournisseur;
+import entities.LotAchat;
+import entities.Produit;
+import exceptions.LotAchatQuantityException;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import tabs.tabUtilities.TabTemplate;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TabCommandes implements TabTemplate {
 
@@ -18,86 +28,164 @@ public class TabCommandes implements TabTemplate {
         VBox root = new VBox(20); // Conteneur principal vertical
         root.setStyle("-fx-padding: 10;");
 
-        // Titre de la section
         Label title = new Label("Liste des commandes du jour");
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 16;");
+        Label subTitle = new Label("Les commandes pour le lendemain sont passées automatiquement à minuit");
 
-        // Conteneur pour la liste des commandes
         VBox commandesContainer = new VBox(10);
+        HBox labels = new HBox(10);
+        labels.getChildren().addAll(
+                new Label("Date d'achat"),
+                new Label("Nom du produit"),
+                new Label("Quantité"),
+                new Label("Prix total"),
+                new Label("Fournisseur")
+        );
 
-        // Exemple de commandes
-        String[][] commandes = {
-                {"Produit A", "Quantité : 10", "Fournisseur : X"},
-                {"Produit B", "Quantité : 5", "Fournisseur : Y"},
-                {"Produit C", "Quantité : 20", "Fournisseur : Z"}
-        };
+        LotAchatDAO lotAchatDAO = new LotAchatDAO();
+        ProduitDAO produitDAO = new ProduitDAO();
+        ContratDAO contratDAO = new ContratDAO();
+        FournisseurDAO fournisseurDAO = new FournisseurDAO();
+        List<LotAchat> lotAchatList = lotAchatDAO.listAll();
+        String[][] commandes = new String[lotAchatList.size()][5];
+        LocalDate today = LocalDate.now();
 
-        // Ajouter chaque commande avec ses actions
+        for (int i = 0; i < lotAchatList.size(); i++) {
+            LotAchat lot = lotAchatList.get(i);
+            if (lot.getDateAchat().isAfter(today)) {
+
+                Contrat contrat = contratDAO.getById(lot.getContratId());
+                Produit produit = produitDAO.getById(contrat.getIdProduit());
+                Fournisseur fournisseur = fournisseurDAO.getById(contrat.getnumSiret());
+
+                commandes[i][0] = lot.getDateAchat().toString();
+                commandes[i][1] = produit.getNom();
+                commandes[i][2] = "" + lot.getQuantite();
+                commandes[i][3] = "" + (produit.getPrixVenteActuel() * lot.getQuantite());
+                commandes[i][4] = fournisseur.getNomSociete();
+            }
+        }
+
+        // on ajoute les commandes au container
         for (String[] commande : commandes) {
             HBox commandeRow = new HBox(10);
             commandeRow.setStyle("-fx-padding: 5; -fx-border-color: lightgray; -fx-border-width: 1;");
 
-            // Infos
             VBox details = new VBox(5);
             details.getChildren().addAll(
-                    new Label(commande[0]), // Produit
-                    new Label(commande[1]), // Quantité
-                    new Label(commande[2])  // Fournisseur
+                    new Label(commande[0]),
+                    new Label(commande[1]),
+                    new Label(commande[2]),
+                    new Label(commande[3]),
+                    new Label(commande[4])
             );
 
-            // Boutons
-            Button btnValider = new Button("Valider");
+            // boutons d'actions
             Button btnSupprimer = new Button("Supprimer");
             Button btnReporter = new Button("Reporter");
             Button btnModifier = new Button("Modifier");
 
-            btnValider.setOnAction(e -> validerCommande(commande[0]));
             btnSupprimer.setOnAction(e -> supprimerCommande(commande[0]));
             btnReporter.setOnAction(e -> reporterCommande(commande[0]));
             btnModifier.setOnAction(e -> modifierCommande(commande[0]));
 
             VBox actions = new VBox(5);
-            actions.getChildren().addAll(btnValider, btnSupprimer, btnReporter, btnModifier);
+            actions.getChildren().addAll(btnSupprimer, btnReporter, btnModifier);
 
-            // Ajouter les détails et les actions à la ligne de commande
+            // ajout final des lignes de commande
             commandeRow.getChildren().addAll(details, actions);
             commandesContainer.getChildren().add(commandeRow);
         }
 
-        // Formulaire pour ajouter une nouvelle commande
+        // ajout commande
         Label addCommandTitle = new Label("Ajouter une nouvelle commande");
         addCommandTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-
         HBox addCommandForm = new HBox(10);
-        TextField produitField = new TextField();
-        produitField.setPromptText("Produit");
-        TextField fournisseurField = new TextField();
-        fournisseurField.setPromptText("Fournisseur");
-        TextField quantiteField = new TextField();
-        quantiteField.setPromptText("Quantité");
-        DatePicker datePicker = new DatePicker();
-        datePicker.setPromptText("Date");
-        Button btnAjouter = new Button("Ajouter");
+        HBox contenu = new HBox(10);
 
-        // Gestionnaire d'événement pour le bouton d'ajout
-        btnAjouter.setOnAction(e -> ajouterCommande(
-                produitField.getText(),
-                fournisseurField.getText(),
-                quantiteField.getText(),
-                datePicker.getValue()
-        ));
+        List<Produit> produitList = produitDAO.listAll();
+        ComboBox<Produit> produitComboBox = new ComboBox<>();
+        ComboBox<Fournisseur> fournisseurComboBox = new ComboBox<>();
+        produitComboBox.getItems().addAll(produitList);
+        produitComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public Produit fromString(String arg0) {
+                return null;
+            }
 
-        addCommandForm.getChildren().addAll(produitField, fournisseurField, quantiteField, datePicker, btnAjouter);
+            @Override
+            public String toString(Produit arg0) {
+                return (arg0 == null) ? "" : arg0.getNom();
+            }
+        });
 
-        // Ajouter toutes les sections au conteneur principal
-        root.getChildren().addAll(title, commandesContainer, addCommandTitle, addCommandForm);
+        produitComboBox.setOnAction(e -> {
+            List<Contrat> contratList = contratDAO.listAll();
+            Produit produit = produitComboBox.getValue();
+            HashMap<Fournisseur, Contrat> mapContrats = new HashMap<>();
+
+            for (Contrat contrat : contratList) {
+                if (contrat.getIdProduit() == produit.getId()
+                        && (contrat.getDateDebut().isBefore(today) || contrat.getDateDebut().isEqual(today))
+                        && (contrat.getDateFin().isAfter(today) || contrat.getDateFin().isEqual(today))) {
+                    Fournisseur localFournisseur = fournisseurDAO.getById(contrat.getnumSiret());
+                    fournisseurComboBox.getItems().add(localFournisseur);
+                    mapContrats.put(localFournisseur, contrat);
+                }
+            }
+
+            fournisseurComboBox.setConverter(new StringConverter<>() {
+                @Override
+                public Fournisseur fromString(String arg0) {
+                    return null;
+                }
+
+                @Override
+                public String toString(Fournisseur arg0) {
+                    return (arg0 == null) ? "" : arg0.getNomSociete();
+                }
+            });
+            contenu.getChildren().add(fournisseurComboBox);
+
+            fournisseurComboBox.setOnAction(a -> {
+                Contrat tempoContrat = null;
+                for (Map.Entry<Fournisseur, Contrat> entry : mapContrats.entrySet()) {
+                    if (entry.getKey().getNumSiret() == fournisseurComboBox.getValue().getNumSiret())
+                        tempoContrat = entry.getValue();
+
+                }
+                TextField quantiteField = new TextField();
+                quantiteField.setPromptText("Quantite (min " + tempoContrat.getQuantiteMin() + ")");
+                DatePicker dateBuying = new DatePicker();
+                dateBuying.setPromptText("Date achat");
+                DatePicker datePeremption = new DatePicker();
+                datePeremption.setPromptText("Date peremption");
+                Button btnAjouter = new Button("Ajouter");
+
+                contenu.getChildren().addAll(quantiteField, dateBuying, datePeremption, btnAjouter);
+
+                Contrat finalTempoContrat = tempoContrat;
+                btnAjouter.setOnAction(b -> {
+                    try {
+                        ajouterCommande(
+                                finalTempoContrat,
+                                Integer.parseInt(quantiteField.getText()),
+                                finalTempoContrat.getQuantiteMin(),
+                                dateBuying.getValue(),
+                                datePeremption.getValue()
+                        );
+                    } catch (LotAchatQuantityException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+            });
+        });
+
+        addCommandForm.getChildren().addAll(produitComboBox, contenu);
+
+        root.getChildren().addAll(title, subTitle, commandesContainer, addCommandTitle, addCommandForm);
 
         return root;
-    }
-
-    // Méthodes d'exemple pour gérer les actions
-    private void validerCommande(String produit) {
-        System.out.println("Commande validée : " + produit);
     }
 
     private void supprimerCommande(String produit) {
@@ -112,9 +200,7 @@ public class TabCommandes implements TabTemplate {
         System.out.println("Modification de la commande : " + produit);
     }
 
-    private void ajouterCommande(String produit, String fournisseur, String quantite, LocalDate date) {
-        System.out.println("Nouvelle commande ajoutée : " + produit + " | " + fournisseur + " | " + quantite + " | " + date);
+    private void ajouterCommande(Contrat contrat, double quantite, double min, LocalDate dateAchat, LocalDate datePeremption) throws LotAchatQuantityException {
+        if(quantite < min) throw new LotAchatQuantityException(contrat, min);
     }
-
-
 }
