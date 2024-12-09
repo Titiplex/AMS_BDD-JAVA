@@ -48,18 +48,12 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
     @Override
     public void insertInTable(LotAchat entity) {
-        String query = "INSERT INTO ams_lotachat (idcontrat, quantite, dateachat, dateperemption) VALUES " + entity.getValues();
-        String queryID = "SELECT idlotachat FROM ams_lotachat WHERE idcontrat = " + entity.getContratId()
-                + " AND quantite = " + entity.getQuantite()
-                + " AND dateachat = '" + entity.getDateAchat() + "'"
-                + " AND dateperemption = '" + entity.getDatePeremption() + "'";
+        String query = "INSERT INTO ams_lotachat (idcontrat, quantite, dateachat, dateperemption) VALUES " + entity.getValues() + " RETURNING idlotachat";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
-            stmt = conn.prepareStatement(queryID);
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()) entity.setId(rs.getInt("idlotachat"));
+            if (rs.next()) entity.setId(rs.getInt("idlotachat"));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -77,7 +71,7 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
         try{
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -120,7 +114,7 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

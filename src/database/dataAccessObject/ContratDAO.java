@@ -48,18 +48,10 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
     @Override
     public void insertInTable(Contrat entity) {
-        String query = "INSERT INTO ams_contrat (idfournisseur, idproduit, quantitemin, datedebut, datefin, prixfixe) VALUES " + entity.getValues();
-        String queryID = "SELECT idlotachat FROM ams_contrat WHERE idfournisseur = " + entity.getnumSiret()
-                + " AND idproduit = " + entity.getIdProduit()
-                + " AND quantitemin" + entity.getQuantiteMin()
-                + " AND datedebut = '" + entity.getDateDebut() + "'"
-                + " AND datefin = '" + entity.getDateFin() + "'"
-                + "AND prixfixe = " + entity.getPrixFixe();
+        String query = "INSERT INTO ams_contrat (idfournisseur, idproduit, quantitemin, datedebut, datefin, prixfixe) VALUES " + entity.getValues() + "RETURNING idcontrat";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
-            stmt = conn.prepareStatement(queryID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) entity.setId(rs.getInt("idcontrat"));
         } catch (SQLException e) {
@@ -81,7 +73,7 @@ public class ContratDAO implements DAOInterface<Contrat> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -125,7 +117,7 @@ public class ContratDAO implements DAOInterface<Contrat> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

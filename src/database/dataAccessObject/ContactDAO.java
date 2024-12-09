@@ -46,17 +46,10 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
     @Override
     public void insertInTable(Contact entity) {
-        String query = "INSERT INTO ams_contact (nom, prenom, fonction, tel, email) VALUES " + entity.getValues();
-        String queryID = "SELECT idlotachat FROM ams_contact WHERE nom = '" + entity.getNom() + "'"
-                + " AND prenom = '" + entity.getPrenom() + "'"
-                + " AND fonction = '" + entity.getFonction() + "'"
-                + " AND tel = '" + entity.getNumTel() + "'"
-                + "AND email = '" + entity.geteMail() + "'";
+        String query = "INSERT INTO ams_contact (nom, prenom, fonction, tel, email) VALUES " + entity.getValues() + " RETURNING idcontact";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
-            stmt = conn.prepareStatement(queryID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) entity.setId(rs.getInt("idcontact"));
         } catch (SQLException e) {
@@ -77,7 +70,7 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -117,7 +110,7 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

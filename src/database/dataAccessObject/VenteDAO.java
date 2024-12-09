@@ -72,16 +72,10 @@ public class VenteDAO implements DAOInterface<Vente> {
 
     @Override
     public void insertInTable(Vente entity) {
-        String query = "INSERT INTO ams_vente (idlotachat, prixdumoment, quantite, datevente) VALUES " + entity.getValues();
-        String queryID = "SELECT idlotachat FROM ams_lotachat WHERE idvente = " + entity.getIdLotAchat()
-                + " AND quantite = " + entity.getQuantity()
-                + " AND datevente = '" + entity.getDateAchat() + "'"
-                + " AND prixdumoment = " + entity.getPrixDuMoment();
+        String query = "INSERT INTO ams_vente (idlotachat, prixdumoment, quantite, datevente) VALUES " + entity.getValues() + " RETURNING idvente";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
-            stmt = conn.prepareStatement(queryID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) entity.setId(rs.getInt("idvente"));
         } catch (SQLException e) {
@@ -102,7 +96,7 @@ public class VenteDAO implements DAOInterface<Vente> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -116,7 +110,7 @@ public class VenteDAO implements DAOInterface<Vente> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
