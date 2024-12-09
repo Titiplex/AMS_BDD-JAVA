@@ -123,7 +123,7 @@ public class TabProduits implements TabTemplate {
         addProductForm.getChildren().addAll(nom, description, mesure, prixActuel, categorieComboBox, btnAjouter);
 
         // Ajouter toutes les sections au conteneur principal
-        root.getChildren().addAll(title, addProductForm, produitsContainer, addProductTitle);
+        root.getChildren().addAll(title, addProductTitle, addProductForm, produitsContainer);
 
         return root;
     }

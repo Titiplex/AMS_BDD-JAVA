@@ -183,7 +183,7 @@ public class TabCommandes implements TabTemplate {
 
         addCommandForm.getChildren().addAll(produitComboBox, contenu);
 
-        root.getChildren().addAll(title, subTitle, commandesContainer, addCommandTitle, addCommandForm);
+        root.getChildren().addAll(title, addCommandTitle, addCommandForm, subTitle, commandesContainer);
 
         return root;
     }

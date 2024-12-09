@@ -132,7 +132,7 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
      * @return
      */
     @Override
-    public List<Contact> listAllFromJoin(Fournisseur joinEntity) {
+    public List<Contact> listAllFromParameter(Fournisseur joinEntity) {
         List<Contact> listContacts = new ArrayList<>();
 
         String query = "SELECT * from ams_fournisseur_contact join ams_contact using(idcontact) where idfournisseur=" + joinEntity.getNumSiret();

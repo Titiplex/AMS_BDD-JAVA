@@ -11,6 +11,7 @@ public class LotAchat extends SqlEntity {
     private LocalDate dateAchat, datePeremption;
 
     public LotAchat(int id, int idContrat, double quantite, LocalDate dateAchat, LocalDate datePeremption) {
+        super("ams_lotachat");
 
         this.id = id;
         this.idContrat = idContrat;
@@ -58,7 +59,7 @@ public class LotAchat extends SqlEntity {
     @Override
     public void getStruct() {
 
-        super.getStruct("LotAchat");
+        super.getStruct(LotAchat.tableName);
 
         // doubler les apostrophes pour éviter les pb de sql
         this.values = "(" + this.idContrat + ", " + this.quantite + ", '" + this.dateAchat.toString() + "', '" + this.datePeremption.toString() + "'" + ")";

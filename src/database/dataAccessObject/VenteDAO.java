@@ -28,7 +28,7 @@ public class VenteDAO implements DAOInterface<Vente> {
             while (rs.next()) {
                 int id = rs.getInt("idvente");
                 int idLotAchat = rs.getInt("idlotachat");
-                int prixDuMoment = rs.getInt("prixdumoment");
+                float prixDuMoment = rs.getFloat("prixdumoment");
                 LocalDate dateAchat = rs.getDate("datevente").toLocalDate();
                 int quantity = rs.getInt("quantite");
 
@@ -56,7 +56,7 @@ public class VenteDAO implements DAOInterface<Vente> {
             // on part du principe que les identifiants sont uniques
             int rsId = rs.getInt("id");
             int idLot = rs.getInt("idLotAchat");
-            int prixDuMoment = rs.getInt("prixDuMoment");
+            float prixDuMoment = rs.getFloat("prixDuMoment");
             LocalDate dateAchat = rs.getDate("dateAchat").toLocalDate();
             int quantity = rs.getInt("quantity");
 

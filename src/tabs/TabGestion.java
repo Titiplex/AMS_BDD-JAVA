@@ -82,7 +82,7 @@ public class TabGestion implements TabTemplate {
 			contactsTitle.setStyle("-fx-font-weight: bold;");
 
 			ContactDAO contactDAO = new ContactDAO();
-			List<Contact> listContacts = contactDAO.listAllFromJoin(fournisseur);
+			List<Contact> listContacts = contactDAO.listAllFromParameter(fournisseur);
 
 			contactsBox[0].getChildren().add(contactsTitle);
 			for (Contact contact : listContacts) {
