@@ -11,6 +11,7 @@ import entities.Vente;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import tabs.tabUtilities.TabTemplate;
@@ -24,7 +25,7 @@ import java.util.List;
 public class TabResultats implements TabTemplate {
 
     @Override
-    public Node createTab() {
+    public ScrollPane createTab() {
 
         HBox root = new HBox(20); // conteneur principal
         root.setStyle("-fx-padding: 10;");
@@ -43,24 +44,26 @@ public class TabResultats implements TabTemplate {
             if ("Trier par Quantité".equals(selectedOption)) {
                 listVentes.sort(Comparator.comparingInt(Vente::getQuantity).reversed());
             } else if ("Trier par Bénéfice".equals(selectedOption)) {
-				listVentes.sort((vente1, vente2) -> {
-					double benefice1 = getBenefice(vente1, new ContratDAO().getById(new LotAchatDAO().getById(vente1.getIdLotAchat()).getContratId()));
-					double benefice2 = getBenefice(vente2, new ContratDAO().getById(new LotAchatDAO().getById(vente2.getIdLotAchat()).getContratId()));
-					return Double.compare(benefice2, benefice1); // Trie décroissant
-				});
-			}
-			root.getChildren().removeIf(node -> node != sortComboBox);
+                listVentes.sort((vente1, vente2) -> {
+                    double benefice1 = getBenefice(vente1, new ContratDAO().getById(new LotAchatDAO().getById(vente1.getIdLotAchat()).getContratId()));
+                    double benefice2 = getBenefice(vente2, new ContratDAO().getById(new LotAchatDAO().getById(vente2.getIdLotAchat()).getContratId()));
+                    return Double.compare(benefice2, benefice1); // Trie décroissant
+                });
+            }
+            root.getChildren().removeIf(node -> node != sortComboBox);
             root.getChildren().add(maj(listVentes));
         });
 
         root.getChildren().addAll(sortComboBox);
 
-        return root;
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        return scrollPane;
     }
 
     private Node maj(List<Vente> listVentes) {
-		HBox root = new HBox(20);
-		root.setStyle("-fx-padding: 10;");
+        HBox root = new HBox(20);
+        root.setStyle("-fx-padding: 10;");
 
         // on créé une liste de produits en string
         String[][] topDaySalesString = new String[10][3];
@@ -76,7 +79,7 @@ public class TabResultats implements TabTemplate {
             Contrat tempoContrat = new ContratDAO().getById(tempoLot.getContratId());
             Produit tempoProduit = new ProduitDAO().getById(tempoContrat.getIdProduit());
 
-			LocalDate dateAchat = tempo.getDateAchat();
+            LocalDate dateAchat = tempo.getDateAchat();
             LocalDate today = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
             double benefice = getBenefice(tempo, tempoContrat);
@@ -123,9 +126,9 @@ public class TabResultats implements TabTemplate {
 
         monthColumn.getChildren().addAll(monthTitle, monthTotalSales, monthTotalBenef, monthTopSalesLabel, monthTopSalesList);
 
-        // Ajouter les deux colonnes dans le conteneur principal
         root.getChildren().addAll(dayColumn, monthColumn);
-		return root;
+
+        return root;
     }
 
     private VBox createTopSalesList(String[][] salesData) {

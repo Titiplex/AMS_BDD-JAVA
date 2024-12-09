@@ -9,7 +9,6 @@ import entities.Fournisseur;
 import entities.LotAchat;
 import entities.Produit;
 import exceptions.LotAchatQuantityException;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,13 +24,14 @@ import java.util.Map;
 public class TabCommandes implements TabTemplate {
 
     @Override
-    public Node createTab() {
+    public ScrollPane createTab() {
         VBox root = new VBox(20); // Conteneur principal vertical
         root.setStyle("-fx-padding: 10;");
 
         Label title = new Label("Liste des commandes du jour");
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 16;");
-        Label subTitle = new Label("Les commandes pour le lendemain sont passées automatiquement à minuit");
+        Label subTitle = new Label("Les commandes pour le lendemain sont passées automatiquement à minuit" +
+                "\tValider pour passer une commande ultérieure directement aujourd'hui");
 
         VBox commandesContainer = new VBox(10);
         HBox labels = new HBox(10);
@@ -85,9 +85,11 @@ public class TabCommandes implements TabTemplate {
             // boutons d'actions
             Button btnSupprimer = new Button("Supprimer");
             Button btnModifier = new Button("Modifier");
+            Button btnValider = new Button("Valider");
 
             btnSupprimer.setOnAction(e -> supprimerCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
             btnModifier.setOnAction(e -> modifierCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
+            btnValider.setOnAction(e -> validerCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
 
             VBox actions = new VBox(5);
             actions.getChildren().addAll(btnModifier, btnSupprimer);
@@ -183,9 +185,11 @@ public class TabCommandes implements TabTemplate {
 
         addCommandForm.getChildren().addAll(produitComboBox, contenu);
 
-        root.getChildren().addAll(title, subTitle, commandesContainer, addCommandTitle, addCommandForm);
+        root.getChildren().addAll(title, addCommandTitle, addCommandForm, subTitle, commandesContainer);
 
-        return root;
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        return scrollPane;
     }
 
     private void supprimerCommande(LotAchat lot) {
@@ -203,5 +207,11 @@ public class TabCommandes implements TabTemplate {
         LotAchatDAO lotAchatDAO = new LotAchatDAO();
         lotAchatDAO.insertInTable(new LotAchat(1, contrat.getId(), quantite, dateAchat, datePeremption));
         // TODO regénérer la fenêtre pour update le contenu
+    }
+
+    private void validerCommande(LotAchat lot) {
+        LotAchatDAO lotAchatDAO = new LotAchatDAO();
+        lot.setDateAchat(LocalDate.now());
+        lotAchatDAO.modifyEntity(lot);
     }
 }

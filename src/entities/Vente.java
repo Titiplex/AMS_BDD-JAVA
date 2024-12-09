@@ -7,11 +7,12 @@ import database.databaseUtilities.SqlEntity;
 
 public class Vente extends SqlEntity {
 
-	private int id, idLotAchat, prixDuMoment, quantity;
+	private int id, idLotAchat, quantity;
+	private float prixDuMoment;
 	private LocalDate dateAchat;
 
-	public Vente(int id, int idLotAchat, int prixDuMoment, LocalDate dateVente, int quantity) {
-		super();
+	public Vente(int id, int idLotAchat, float prixDuMoment, LocalDate dateVente, int quantity) {
+		super("ams_vente");
 		this.id = id;
 		this.idLotAchat = idLotAchat;
 		this.prixDuMoment = prixDuMoment;
@@ -27,7 +28,7 @@ public class Vente extends SqlEntity {
 		return idLotAchat;
 	}
 
-	public int getPrixDuMoment() {
+	public float getPrixDuMoment() {
 		return prixDuMoment;
 	}
 
@@ -46,7 +47,7 @@ public class Vente extends SqlEntity {
 	@Override
 	public void getStruct() {
 		
-		super.getStruct("Vente");
+		super.getStruct(Vente.tableName);
 
 		// doubler les apostrophes pour éviter les pb de sql
 		this.values = "(" +

@@ -2,92 +2,93 @@ package entities;
 
 import database.databaseUtilities.SqlEntity;
 
-/**Entity linked to a @Fournisseur that holds the personal human informations them.
- *
+/**
+ * Entity linked to a @Fournisseur that holds the personal human informations them.
  */
 public class Contact extends SqlEntity {
-	private int id;
-	private String nom, prenom, fonction, numTel, eMail;
+    private int id;
+    private String nom, prenom, fonction, numTel, eMail;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	/**Constructor for a Contact.
-	 * 
-	 * @param id
-	 * @param nom
-	 * @param prenom
-	 * @param fonction
-	 * @param numTel
-	 * @param eMail
-	 */
-	public Contact(int id,String nom, String prenom, String fonction, String numTel, String eMail) {
-		super();
-		this.id=id;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.fonction = fonction;
-		this.numTel = numTel;
-		this.eMail = eMail;
-	}
-	
-	public int getId() {
-		return id;
-	}
+    /**
+     * Constructor for a Contact.
+     *
+     * @param id
+     * @param nom
+     * @param prenom
+     * @param fonction
+     * @param numTel
+     * @param eMail
+     */
+    public Contact(int id, String nom, String prenom, String fonction, String numTel, String eMail) {
+        super("ams_contact");
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.fonction = fonction;
+        this.numTel = numTel;
+        this.eMail = eMail;
+    }
 
-	public String getNom() {
-		return nom;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+    public String getNom() {
+        return nom;
+    }
 
-	public String getPrenom() {
-		return prenom;
-	}
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
+    public String getPrenom() {
+        return prenom;
+    }
 
-	public String getFonction() {
-		return fonction;
-	}
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
 
-	public void setFonction(String fonction) {
-		this.fonction = fonction;
-	}
+    public String getFonction() {
+        return fonction;
+    }
 
-	public String getNumTel() {
-		return numTel;
-	}
+    public void setFonction(String fonction) {
+        this.fonction = fonction;
+    }
 
-	public void setNumTel(String numTel) {
-		this.numTel = numTel;
-	}
+    public String getNumTel() {
+        return numTel;
+    }
 
-	public String geteMail() {
-		return eMail;
-	}
+    public void setNumTel(String numTel) {
+        this.numTel = numTel;
+    }
 
-	public void seteMail(String eMail) {
-		this.eMail = eMail;
-	}
-	
-	@Override
-	public void getStruct() {
-		
-		super.getStruct("Contact");
+    public String geteMail() {
+        return eMail;
+    }
 
-		// doubler les apostrophes pour éviter les pb de sql
-		this.values = "('" +
-				this.nom.replace("'", "''") + "', '" + 
-				this.prenom.replace("'", "''") + "', '" + 
-				this.fonction.replace("'", "''") + "', '" + 
-				this.numTel.replace("'", "''") + "', " + 
-				this.eMail.replace("'", "''") + "'" + 
-				")";
-	}
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
+    }
+
+    @Override
+    public void getStruct() {
+
+        super.getStruct(Contact.tableName);
+
+        // doubler les apostrophes pour éviter les pb de sql
+        this.values = "('" +
+                this.nom.replace("'", "''") + "', '" +
+                this.prenom.replace("'", "''") + "', '" +
+                this.fonction.replace("'", "''") + "', '" +
+                this.numTel.replace("'", "''") + "', '" +
+                this.eMail.replace("'", "''") + "'" +
+                ")";
+    }
 }

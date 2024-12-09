@@ -8,9 +8,10 @@ public class Contrat extends SqlEntity {
 
     private int id, numSiret, idProduit, quantiteMin;
     private LocalDate dateDebut, dateFin;
-    private double prixFixe;
+    private float prixFixe;
 
-    public Contrat(int id, int numSiret, int idProduit, int quantiteMin, LocalDate dateDebut, LocalDate dateFin, double prixFixe) {
+    public Contrat(int id, int numSiret, int idProduit, int quantiteMin, LocalDate dateDebut, LocalDate dateFin, float prixFixe) {
+        super("ams_contrat");
         this.id = id;
         this.numSiret = numSiret;
         this.idProduit = idProduit;
@@ -48,18 +49,17 @@ public class Contrat extends SqlEntity {
         return dateFin;
     }
 
-    public double getPrixFixe() {
+    public float getPrixFixe() {
         return prixFixe;
     }
 
     @Override
     public void getStruct() {
 
-        super.getStruct("Contrat");
+        super.getStruct("ams_contrat");
 
         // doubler les apostrophes pour éviter les pb de sql
         this.values = "(" +
-                this.id + ", '" +
                 this.numSiret + ", " +
                 this.idProduit + ", " +
                 this.quantiteMin + ", '" +

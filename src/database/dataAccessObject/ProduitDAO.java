@@ -26,12 +26,14 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
             while (rs.next()) {
                 int id = rs.getInt("idproduit");
-                String nom = rs.getString("nom");
-                String description = rs.getString("description");
-                String mesure = rs.getString("mesure");
-                float prixVenteActuel = rs.getFloat("prixventeactuel");
+                if(id != 1) {
+                    String nom = rs.getString("nom");
+                    String description = rs.getString("description");
+                    String mesure = rs.getString("mesure");
+                    float prixVenteActuel = rs.getFloat("prixventeactuel");
 
-                listProduits.add(new Produit(id, prixVenteActuel, nom, description, mesure));
+                    listProduits.add(new Produit(id, prixVenteActuel, nom, description, mesure));
+                }
             }
 
         } catch (SQLException e) {
@@ -44,16 +46,10 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
     @Override
     public void insertInTable(Produit entity) {
-        String query = "INSERT INTO ams_produit (nom, prixventeactuel, description, mesure) VALUES " + entity.getValues();
-        String queryID = "SELECT idlotachat FROM ams_lotachat WHERE nom = '" + entity.getNom() + "'"
-                + " AND description = '" + entity.getDescription() + "'"
-                + " AND mesure = '" + entity.getMesure() + "'"
-                + " AND prixventeactuel = " + entity.getPrixVenteActuel();
+        String query = "INSERT INTO ams_produit (nom, prixventeactuel, mesure, description) VALUES " + entity.getValues() + " RETURNING idproduit";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
-            stmt = conn.prepareStatement(queryID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) entity.setId(rs.getInt("idproduit"));
         } catch (SQLException e) {
@@ -93,6 +89,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
     @Override
     public void modifyEntity(Produit entity) {
+        // TODO gérer erreur
         String query = "UPDATE ams_lotachat SET nom = '" + entity.getNom() + "'"
                 + " AND description = '" + entity.getDescription() + "'"
                 + " AND mesure = '" + entity.getMesure() + "'"
@@ -101,7 +98,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -115,7 +112,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

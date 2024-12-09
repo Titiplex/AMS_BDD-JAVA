@@ -21,6 +21,7 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
      * @param mesure
      */
     public Produit(int id, float prixVenteActuel, String nom, String description, String mesure) {
+        super("ams_produit");
         try {
             this.id = id;
             validateProductName(nom);
@@ -123,14 +124,14 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
     @Override
     public void getStruct() {
 
-        super.getStruct("Produit");
+        super.getStruct(Produit.tableName);
 
         // doubler les apostrophes pour éviter les pb de sql
         this.values = "('" +
                 this.nom.replace("'", "''") + "', " +
-				this.prixVenteActuel + ", '" +
+                this.prixVenteActuel + ", '" +
                 this.mesure.replace("'", "''") + "', '" +
-				this.description.replace("'", "''") + "'" +
+                this.description.replace("'", "''") + "'" +
                 ")";
     }
 

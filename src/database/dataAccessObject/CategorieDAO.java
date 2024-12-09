@@ -14,8 +14,6 @@ import entities.Categorie;
 public class CategorieDAO implements DAOInterface<Categorie> {
 	private int temporaryID;
 
-	// TODO revoir cette classe, pas clair ce que l'on fait avec
-
 	public void setTemporaryID(int temporaryID) {
 		this.temporaryID = temporaryID;
 	}
@@ -47,12 +45,31 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 
 	@Override
 	public void insertInTable(Categorie entity) {
-		// TODO Auto-generated method stub
+		String query = "INSERT INTO ams_produit_categorie (idproduit, categorie) VALUES (" + this.temporaryID + ", '" + entity.getCategorie() + "')";
+		try {
+			Connection conn = ConnectDatabase.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectDatabase.closeConnection();
+		}
 	}
 
 	@Override
 	public void modifyEntity(Categorie entity) {
-		// TODO Auto-generated method stub
+		String query = "UPDATE ams_lotachat SET categorie = " + entity.getCategorie()
+				+ "WHERE idproduit = " + this.temporaryID + " AND categorie = " + entity.getCategorie();
+		try {
+			Connection conn = ConnectDatabase.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			ConnectDatabase.closeConnection();
+		}
 	}
 
 	@Override
@@ -79,8 +96,15 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 
 	@Override
 	public void deleteEntity(Categorie entity) {
-		// TODO Auto-generated method stub
-		
+		String query = "DELETE FROM ams_produit_categorie WHERE idproduit = " + this.temporaryID;
+		try {
+			Connection conn = ConnectDatabase.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectDatabase.closeConnection();
+		}
 	}
-
 }
