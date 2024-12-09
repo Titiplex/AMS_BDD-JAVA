@@ -8,10 +8,11 @@ import exceptions.ProductNameLengthException;
 
 public class Produit extends SqlEntity implements SetterInterface<Produit> {
     // id déterminé automtiquement par sql
-    private static final int MAX_NAME_LENGTH = 15;
     private int id;
-    private String nom, description, mesure;
+    private String nom;
     private float prixVenteActuel;
+    private String mesure;
+    private String description;
 
     /**
      * @param id
@@ -101,8 +102,8 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
      * @throws ProductNameLengthException if the name is more than 15 characters
      */
     private void validateProductName(String nom) throws ProductNameLengthException {
-        if (nom.length() > MAX_NAME_LENGTH) {
-            throw new ProductNameLengthException("Le nom du produit " + nom + " ne peut excéder " + MAX_NAME_LENGTH + " caractères.");
+        if (nom.length() > 15) {
+            throw new ProductNameLengthException("Le nom du produit " + nom + " ne peut excéder 15 caractères.");
         }
     }
 
@@ -127,12 +128,12 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
         super.getStruct(Produit.tableName);
 
         // doubler les apostrophes pour éviter les pb de sql
-        this.values = "('" +
+       /* this.values = "('" +
                 this.nom.replace("'", "''") + "', " +
-                this.prixVenteActuel + ", '" +
+				this.prixVenteActuel + ", '" +
                 this.mesure.replace("'", "''") + "', '" +
-                this.description.replace("'", "''") + "'" +
-                ")";
+				this.description.replace("'", "''") + "'" +
+                ")";*/
     }
 
     @Override

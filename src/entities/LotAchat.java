@@ -6,11 +6,13 @@ import java.time.LocalDate;
 
 public class LotAchat extends SqlEntity {
 
-    private int id, idContrat;
-    private double quantite;
-    private LocalDate dateAchat, datePeremption;
+    private int id;
+    private int idContrat;
+    private int quantite;
+    private LocalDate dateAchat;
+    private LocalDate datePeremption;
 
-    public LotAchat(int id, int idContrat, double quantite, LocalDate dateAchat, LocalDate datePeremption) {
+    public LotAchat(int id, int idContrat, int quantite, LocalDate dateAchat, LocalDate datePeremption) {
         super("ams_lotachat");
 
         this.id = id;
@@ -20,7 +22,7 @@ public class LotAchat extends SqlEntity {
         this.datePeremption = datePeremption;
     }
 
-    public void setQuantite(double quantite) {
+    public void setQuantite(int quantite) {
         this.quantite = quantite;
     }
 
@@ -40,7 +42,7 @@ public class LotAchat extends SqlEntity {
         return idContrat;
     }
 
-    public double getQuantite() {
+    public int getQuantite() {
         return quantite;
     }
 
@@ -62,6 +64,6 @@ public class LotAchat extends SqlEntity {
         super.getStruct(LotAchat.tableName);
 
         // doubler les apostrophes pour éviter les pb de sql
-        this.values = "(" + this.idContrat + ", " + this.quantite + ", '" + this.dateAchat.toString() + "', '" + this.datePeremption.toString() + "'" + ")";
+        /*this.values = "(" + this.idContrat + ", " + this.quantite + ", '" + this.dateAchat.toString() + "', '" + this.datePeremption.toString() + "'" + ")";*/
     }
 }

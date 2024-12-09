@@ -1,5 +1,6 @@
 package database.databaseUtilities;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -44,6 +45,8 @@ public abstract class SqlEntity {
                 e.printStackTrace();
             }
         }
+        //Créer la string values
+        this.createValues(this);
     }
 
     /**
@@ -85,4 +88,44 @@ public abstract class SqlEntity {
      * Implémentation dans les classes filles pour générer les values et la hashmap
      */
     public abstract void getStruct();
+    //Type T Si erreur
+
+    public <SqlEntity> void createValues(SqlEntity object) {
+        Class<?> classe = object.getClass();
+        //initialisation values
+        this.values = "";
+        this.values += "(";
+
+        Field[] fields = classe.getDeclaredFields();
+        //Parcourir chaque champ
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                //Récupérer la valeur du champ
+                Object fieldValue = field.get(object);
+                //Surement utiliser .equals("id")
+                if(field.getName()=="id"){
+                    continue;
+                }
+                //check le type du champ
+                if (fieldValue == null) {
+                    this.values += "NULL, ";
+                } else if (fieldValue instanceof String) {
+                    String standardValue = "'" + fieldValue.toString().replace("'", "''") + "'";
+                    this.values += standardValue + ", ";
+                } else if (fieldValue instanceof Number) {
+                    this.values += fieldValue + ", ";
+                }
+            } catch (IllegalAccessException e) {
+                System.out.println("Impossible d'accéder au champ : " + field.getName());
+            }
+            field.setAccessible(false);
+        }
+        // enlever ", " et ajouter ")"
+        //on vérifie pour pas faire d'erreur mémoire ou un pb
+        if (this.values.length() > 1) {
+            this.values = this.values.substring(0, this.values.length() - 2);
+        }
+        this.values += ")";
+    }
 }

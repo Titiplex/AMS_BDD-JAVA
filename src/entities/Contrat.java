@@ -6,8 +6,12 @@ import java.time.LocalDate;
 
 public class Contrat extends SqlEntity {
 
-    private int id, numSiret, idProduit, quantiteMin;
-    private LocalDate dateDebut, dateFin;
+    private int id;
+    private int idProduit;
+    private int numSiret;
+    private int quantiteMin;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
     private float prixFixe;
 
     public Contrat(int id, int numSiret, int idProduit, int quantiteMin, LocalDate dateDebut, LocalDate dateFin, float prixFixe) {
@@ -58,8 +62,9 @@ public class Contrat extends SqlEntity {
 
         super.getStruct("ams_contrat");
 
-        // doubler les apostrophes pour éviter les pb de sql
-        this.values = "(" +
+        // floatr les apostrophes pour éviter les pb de sql
+       /* this.values = "(" +
+                this.id + ", '" +
                 this.numSiret + ", " +
                 this.idProduit + ", " +
                 this.quantiteMin + ", '" +

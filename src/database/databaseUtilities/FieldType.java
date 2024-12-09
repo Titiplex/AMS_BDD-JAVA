@@ -4,7 +4,7 @@ public enum FieldType {
     NUMERIC, VARCHAR, FLOAT8, INT4, DATE;
 
     public static FieldType getFieldType(String type) {
-        type = type.toLowerCase();
+         type = type.toLowerCase();
         return switch (type) {
             case "int", "integer", "int4" -> FieldType.INT4;
             case "float", "float8" -> FieldType.FLOAT8;
