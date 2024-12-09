@@ -8,7 +8,6 @@ import entities.Categorie;
 import entities.Contrat;
 import entities.LotAchat;
 import entities.Produit;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,7 +22,7 @@ import static tabs.tabUtilities.TabUtilitiesMethodes.getRemainingLot;
 public class TabProduits implements TabTemplate {
 
     @Override
-    public Node createTab() {
+    public ScrollPane createTab() {
         VBox root = new VBox(20); // Conteneur principal vertical
         root.setStyle("-fx-padding: 10;");
         ProduitDAO produitDAO = new ProduitDAO();
@@ -46,7 +45,7 @@ public class TabProduits implements TabTemplate {
             produits[i][3] = "" + produit.getPrixVenteActuel();
         }
 
-        // Ajouter chaque produit avec les détails
+        // produit avec details liste
         for (String[] produit : produits) {
             HBox produitRow = new HBox(20);
             produitRow.setStyle("-fx-padding: 5; -fx-border-color: lightgray; -fx-border-width: 1;");
@@ -110,7 +109,7 @@ public class TabProduits implements TabTemplate {
             Produit produit = new Produit(
                     // TODO récupérer l'id du produit après insertion
                     1,
-                    Integer.parseInt(prixActuel.getText()),
+                    Float.parseFloat(prixActuel.getText()),
                     nom.getText(),
                     description.getText(),
                     mesure.getText()
@@ -125,7 +124,9 @@ public class TabProduits implements TabTemplate {
         // Ajouter toutes les sections au conteneur principal
         root.getChildren().addAll(title, addProductTitle, addProductForm, produitsContainer);
 
-        return root;
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        return scrollPane;
     }
 
     /**

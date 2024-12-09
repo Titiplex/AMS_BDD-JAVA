@@ -104,7 +104,7 @@ public class ContratCreationPopup {
             }
 
             // Logique pour ajouter le contact à la base de données (ou la liste)
-            Contrat newContrat = new Contrat(01, numSiret, idProduit, Integer.parseInt(quantiteMin), startDate, endDate, Integer.parseInt(prixFixe));
+            Contrat newContrat = new Contrat(01, numSiret, idProduit, Integer.parseInt(quantiteMin), startDate, endDate, Float.parseFloat(prixFixe));
 
             ContratDAO contratDAO = new ContratDAO();
             contratDAO.insertInTable(newContrat);

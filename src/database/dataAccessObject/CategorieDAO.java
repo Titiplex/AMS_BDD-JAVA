@@ -45,7 +45,7 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 
 	@Override
 	public void insertInTable(Categorie entity) {
-		String query = "INSERT INTO ams_produit_categorie (idproduit, categorie) VALUES (" + this.temporaryID + ", " + entity.getCategorie() + ") RETURNING idproduit";
+		String query = "INSERT INTO ams_produit_categorie (idproduit, categorie) VALUES (" + this.temporaryID + ", '" + entity.getCategorie() + "')";
 		try {
 			Connection conn = ConnectDatabase.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(query);

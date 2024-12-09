@@ -87,7 +87,7 @@ public class Contact extends SqlEntity {
                 this.nom.replace("'", "''") + "', '" +
                 this.prenom.replace("'", "''") + "', '" +
                 this.fonction.replace("'", "''") + "', '" +
-                this.numTel.replace("'", "''") + "', " +
+                this.numTel.replace("'", "''") + "', '" +
                 this.eMail.replace("'", "''") + "'" +
                 ")";
     }

@@ -22,7 +22,7 @@ public class TabVentes implements TabTemplate {
 
     @Override
     public Node createTab() {
-        // TODO
+        // TODO faire les erreurs et exceptions
         VBox root = new VBox(20);
         root.setStyle("-fx-padding: 10;");
 

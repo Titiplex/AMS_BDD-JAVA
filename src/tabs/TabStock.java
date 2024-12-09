@@ -4,8 +4,8 @@ import database.dataAccessObject.ContratDAO;
 import database.dataAccessObject.LotAchatDAO;
 import database.dataAccessObject.ProduitDAO;
 import entities.LotAchat;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import tabs.tabUtilities.TabTemplate;
@@ -19,7 +19,7 @@ import static tabs.tabUtilities.TabUtilitiesMethodes.getRemainingLot;
 public class TabStock implements TabTemplate {
 
     @Override
-    public Node createTab() {
+    public ScrollPane createTab() {
         VBox root = new VBox(20);
         root.setStyle("-fx-padding: 10;");
 
@@ -99,6 +99,8 @@ public class TabStock implements TabTemplate {
         // Ajouter tout au conteneur principal
         root.getChildren().addAll(title, lotsContainer);
 
-        return root;
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        return scrollPane;
     }
 }

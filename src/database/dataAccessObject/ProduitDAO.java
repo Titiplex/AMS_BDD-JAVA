@@ -46,7 +46,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
     @Override
     public void insertInTable(Produit entity) {
-        String query = "INSERT INTO ams_produit (nom, prixventeactuel, description, mesure) VALUES " + entity.getValues() + " RETURNING idproduit";
+        String query = "INSERT INTO ams_produit (nom, prixventeactuel, mesure, description) VALUES " + entity.getValues() + " RETURNING idproduit";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
