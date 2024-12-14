@@ -153,4 +153,24 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
         }
         return listContacts;
     }
+
+    @Override
+    public void insertInTable(Contact entity, Fournisseur joinEntity) {
+        String query = "INSERT INTO ams_contact (nom, prenom, fonction, tel, email) VALUES " + entity.getValues() + " RETURNING idcontact";
+        try {
+            Connection conn = ConnectDatabase.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                entity.setId(rs.getInt("idcontact"));
+                query = "INSERT INTO ams_fournisseur_contact (idcontact, idfournisseur) VALUES (" + entity.getId() + ", " + joinEntity.getNumSiret() + ")";
+                stmt = conn.prepareStatement(query);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDatabase.closeConnection();
+        }
+    }
 }

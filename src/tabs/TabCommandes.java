@@ -18,6 +18,7 @@ import tabs.popup.UpdateLotAchatPopup;
 import tabs.tabUtilities.TabTemplate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class TabCommandes implements TabTemplate {
         Label title = new Label("Liste des commandes du jour");
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 16;");
         Label subTitle = new Label("Les commandes pour le lendemain sont passées automatiquement à minuit" +
-                "\tValider pour passer une commande ultérieure directement aujourd'hui");
+                "\nValidez pour passer une commande ultérieure directement aujourd'hui");
 
         VBox commandesContainer = new VBox(10);
         HBox labels = new HBox(10);
@@ -49,25 +50,27 @@ public class TabCommandes implements TabTemplate {
         ContratDAO contratDAO = new ContratDAO();
         FournisseurDAO fournisseurDAO = new FournisseurDAO();
         List<LotAchat> lotAchatList = lotAchatDAO.listAll();
-        String[][] commandes = new String[lotAchatList.size()][6];
         LocalDate today = LocalDate.now();
 
-        for (int i = 0; i < lotAchatList.size(); i++) {
-            LotAchat lot = lotAchatList.get(i);
-            if (lot.getDateAchat().isAfter(today)) {
+        List<String[]> commandes = new ArrayList<>(); // Utilisez une liste dynamique
 
+        for (LotAchat lot : lotAchatList) {
+            if (lot.getDateAchat().isAfter(today)) {
                 Contrat contrat = contratDAO.getById(lot.getContratId());
                 Produit produit = produitDAO.getById(contrat.getIdProduit());
                 Fournisseur fournisseur = fournisseurDAO.getById(contrat.getnumSiret());
 
-                commandes[i][0] = lot.getDateAchat().toString();
-                commandes[i][1] = produit.getNom();
-                commandes[i][2] = "" + lot.getQuantite();
-                commandes[i][3] = "" + (produit.getPrixVenteActuel() * lot.getQuantite());
-                commandes[i][4] = fournisseur.getNomSociete();
-                commandes[i][5] = "" + lot.getId();
+                commandes.add(new String[]{
+                        lot.getDateAchat().toString(),
+                        produit.getNom(),
+                        "" + lot.getQuantite(),
+                        "" + (produit.getPrixVenteActuel() * lot.getQuantite()),
+                        fournisseur.getNomSociete(),
+                        "" + lot.getId()
+                });
             }
         }
+
 
         // on ajoute les commandes au container
         for (String[] commande : commandes) {
@@ -76,11 +79,11 @@ public class TabCommandes implements TabTemplate {
 
             VBox details = new VBox(5);
             details.getChildren().addAll(
-                    new Label(commande[0]),
-                    new Label(commande[1]),
-                    new Label(commande[2]),
-                    new Label(commande[3]),
-                    new Label(commande[4])
+                    new Label(commande[0] != null ? commande[0] : ""),
+                    new Label(commande[1] != null ? commande[1] : ""),
+                    new Label(commande[2] != null ? commande[2] : ""),
+                    new Label(commande[3] != null ? commande[3] : ""),
+                    new Label(commande[4] != null ? commande[4] : "")
             );
 
             // boutons d'actions
@@ -93,7 +96,7 @@ public class TabCommandes implements TabTemplate {
             btnValider.setOnAction(e -> validerCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
 
             VBox actions = new VBox(5);
-            actions.getChildren().addAll(btnModifier, btnSupprimer);
+            actions.getChildren().addAll(btnModifier, btnSupprimer, btnValider);
 
             // ajout final des lignes de commande
             commandeRow.getChildren().addAll(details, actions);

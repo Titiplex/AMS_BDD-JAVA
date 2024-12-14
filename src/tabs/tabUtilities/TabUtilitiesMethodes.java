@@ -9,13 +9,14 @@ import java.util.List;
 public class TabUtilitiesMethodes {
     private static List<Vente> listVentes;
 
-    /**Get the number of remaining products in a LotAchat
+    /**
+     * Get the number of remaining products in a LotAchat
      *
      * @param lot
      * @return
      */
     public static double getRemainingLot(LotAchat lot) {
-        if(listVentes == null) {
+        if (listVentes == null) {
             VenteDAO venteDAO = new VenteDAO();
             listVentes = venteDAO.listAll();
         }

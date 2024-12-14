@@ -149,4 +149,9 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
         }
         return listlots;
     }
+
+    @Override
+    public void insertInTable(LotAchat entity, Produit joinEntity) {
+
+    }
 }

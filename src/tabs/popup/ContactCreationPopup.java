@@ -2,6 +2,7 @@ package tabs.popup;
 
 import database.dataAccessObject.ContactDAO;
 import entities.Contact;
+import entities.Fournisseur;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -11,7 +12,7 @@ import javafx.stage.Stage;
 import main.Main;
 
 public class ContactCreationPopup {
-    public ContactCreationPopup() {
+    public ContactCreationPopup(Fournisseur fournisseur) {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -55,7 +56,7 @@ public class ContactCreationPopup {
             Contact newContact = new Contact(01, name, firstName, fonction, phone, email);
 
             ContactDAO contactDAO = new ContactDAO();
-            contactDAO.insertInTable(newContact);
+            contactDAO.insertInTable(newContact, fournisseur);
 
             popupStage.close(); // Fermer la fenêtre popup
             Main.getInstance().recreateTab("Gestion");

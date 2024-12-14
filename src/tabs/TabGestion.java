@@ -91,7 +91,7 @@ public class TabGestion implements TabTemplate {
             Button addContactButton = new Button("Ajouter un contact");
             addContactButton.setOnAction(a -> {
                 // ouvrir popup pour ajouter contact
-                new ContactCreationPopup();
+                new ContactCreationPopup(fournisseur);
             });
 
             contactsBox[0].getChildren().add(addContactButton);
