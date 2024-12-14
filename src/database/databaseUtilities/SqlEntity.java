@@ -39,7 +39,7 @@ public abstract class SqlEntity {
                 while (columns.next()) {
                     String columnName = columns.getString("COLUMN_NAME");
                     String datatype = columns.getString("DATA_TYPE");
-                    this.struct.put(columnName, FieldType.getFieldType(datatype));
+                    struct.put(columnName, FieldType.getFieldType(datatype));
                 }
                 conn.close();
                 hashmapInitialized = true;
@@ -64,7 +64,7 @@ public abstract class SqlEntity {
      * @return
      */
     public HashMap<String, FieldType> getMap() {
-        return this.struct;
+        return struct;
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class SqlEntity {
                 //Récupérer la valeur du champ
                 Object fieldValue = field.get(object);
                 //Surement utiliser .equals("id")
-                if (field.getName() == "id") {
+                if (field.getName().equals("id")) {
                     continue;
                 }
                 //check le type du champ

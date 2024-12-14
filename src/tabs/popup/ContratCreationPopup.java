@@ -53,13 +53,11 @@ public class ContratCreationPopup {
 
             @Override
             public Fournisseur fromString(String arg0) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public String toString(Fournisseur arg0) {
-                // TODO Auto-generated method stub
                 return (arg0 == null) ? "" : arg0.getNomSociete();
             }
 
@@ -76,13 +74,11 @@ public class ContratCreationPopup {
 
             @Override
             public Produit fromString(String arg0) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public String toString(Produit arg0) {
-                // TODO Auto-generated method stub
                 return (arg0 == null) ? "" : arg0.getNom();
             }
 

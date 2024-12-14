@@ -40,13 +40,11 @@ public class TabGestion implements TabTemplate {
 
             @Override
             public Fournisseur fromString(String arg0) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public String toString(Fournisseur arg0) {
-                // TODO Auto-generated method stub
                 return (arg0 == null) ? "" : arg0.getNomSociete();
             }
 
