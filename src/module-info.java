@@ -1,6 +1,8 @@
-/**This project generates a management app for a small store
- * @author Johanny Titouan
- * @author Moinereau Paul
+/**
+ * This project generates a management app for a small store
+ *
+ * @author Titiplex
+ * @author Qwantike
  */
 module AMS.BDD.JAVA {
 
