@@ -30,7 +30,7 @@ public class VenteDAO implements DAOInterface<Vente> {
                 int idLotAchat = rs.getInt("idlotachat");
                 float prixDuMoment = rs.getFloat("prixdumoment");
                 LocalDate dateAchat = rs.getDate("datevente").toLocalDate();
-                int quantity = rs.getInt("quantite");
+                float quantity = rs.getFloat("quantite");
 
                 listVentes.add(new Vente(id, idLotAchat, prixDuMoment, dateAchat, quantity));
             }
@@ -58,7 +58,7 @@ public class VenteDAO implements DAOInterface<Vente> {
             int idLot = rs.getInt("idLotAchat");
             float prixDuMoment = rs.getFloat("prixDuMoment");
             LocalDate dateAchat = rs.getDate("dateAchat").toLocalDate();
-            int quantity = rs.getInt("quantity");
+            float quantity = rs.getFloat("quantity");
 
             vente = new Vente(rsId, idLot, prixDuMoment, dateAchat, quantity);
 

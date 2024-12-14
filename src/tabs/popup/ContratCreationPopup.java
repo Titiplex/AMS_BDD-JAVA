@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import main.Main;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -110,6 +111,7 @@ public class ContratCreationPopup {
             contratDAO.insertInTable(newContrat);
 
             popupStage.close(); // Fermer la fenêtre popup
+            Main.getInstance().recreateTab("Gestion");
         });
 
         // annuler

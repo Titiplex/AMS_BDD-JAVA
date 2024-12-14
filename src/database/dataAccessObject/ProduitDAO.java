@@ -26,7 +26,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
             while (rs.next()) {
                 int id = rs.getInt("idproduit");
-                if(id != 1) {
+                if (id != 1) {
                     String nom = rs.getString("nom");
                     String description = rs.getString("description");
                     String mesure = rs.getString("mesure");

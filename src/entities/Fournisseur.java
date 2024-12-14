@@ -2,11 +2,11 @@ package entities;
 
 import database.databaseUtilities.SqlEntity;
 
-public class Fournisseur extends SqlEntity{
-	private int numSiret;
-	private String nomSociete;
-	private String adresse;
-	private String eMailPrincipal;
+public class Fournisseur extends SqlEntity {
+    private int numSiret;
+    private String nomSociete;
+    private String adresse;
+    private String eMailPrincipal;
 
     public Fournisseur(String nomSociete, int numSiret, String adresse, String eMailPrincipal) {
         super("ams_fournisseur");
@@ -14,6 +14,8 @@ public class Fournisseur extends SqlEntity{
         this.numSiret = numSiret;
         this.adresse = adresse;
         this.eMailPrincipal = eMailPrincipal;
+
+        this.createValues(this);
     }
 
     public String getNomSociete() {
@@ -47,18 +49,4 @@ public class Fournisseur extends SqlEntity{
     public void seteMailPrincipal(String eMailPrincipal) {
         this.eMailPrincipal = eMailPrincipal;
     }
-
-    @Override
-    public void getStruct() {
-
-        super.getStruct(Fournisseur.tableName);
-
-		// doubler les apostrophes pour éviter les pb de sql
-		/*this.values = "(" +
-				this.numSiret+ ", '" +
-				this.nomSociete.replace("'", "''") + "', '" +
-				this.adresse.replace("'", "''") + "', '" +
-				this.eMailPrincipal.replace("'", "''") + "'" +
-				")";*/
-	}
 }

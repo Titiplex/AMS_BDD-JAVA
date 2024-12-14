@@ -19,7 +19,9 @@ public abstract class SqlEntity {
     private static boolean hashmapInitialized = false;
 
     protected SqlEntity(String tableName) {
-        if(SqlEntity.tableName == null) {SqlEntity.tableName = tableName;}
+        if (SqlEntity.tableName == null) {
+            SqlEntity.tableName = tableName;
+        }
         this.getStruct(SqlEntity.tableName);
     }
 
@@ -28,7 +30,7 @@ public abstract class SqlEntity {
      * Il faut implémenter la string values dans les classes filles après un appel a super
      */
     protected void getStruct(String table) {
-        if(!hashmapInitialized) {
+        if (!hashmapInitialized) {
             try {
                 Connection conn = ConnectDatabase.getConnection();
                 DatabaseMetaData databaseMetaData = conn.getMetaData();
@@ -45,8 +47,6 @@ public abstract class SqlEntity {
                 e.printStackTrace();
             }
         }
-        //Créer la string values
-        this.createValues(this);
     }
 
     /**
@@ -55,7 +55,6 @@ public abstract class SqlEntity {
      * @return
      */
     public String getValues() {
-        this.getStruct();
         return this.values;
     }
 
@@ -84,13 +83,7 @@ public abstract class SqlEntity {
         return true;
     }
 
-    /**
-     * Implémentation dans les classes filles pour générer les values et la hashmap
-     */
-    public abstract void getStruct();
-    //Type T Si erreur
-
-    public <SqlEntity> void createValues(SqlEntity object) {
+    protected <SqlEntity> void createValues(SqlEntity object) {
         Class<?> classe = object.getClass();
         //initialisation values
         this.values = "";
@@ -104,7 +97,7 @@ public abstract class SqlEntity {
                 //Récupérer la valeur du champ
                 Object fieldValue = field.get(object);
                 //Surement utiliser .equals("id")
-                if(field.getName()=="id"){
+                if (field.getName() == "id") {
                     continue;
                 }
                 //check le type du champ

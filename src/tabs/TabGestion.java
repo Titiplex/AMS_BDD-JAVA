@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import main.Main;
 import tabs.popup.ContactCreationPopup;
 import tabs.popup.ContratCreationPopup;
 import tabs.tabUtilities.TabTemplate;
@@ -189,5 +190,6 @@ public class TabGestion implements TabTemplate {
 				adresse,
 				email
 		));
+        Main.getInstance().recreateTab("Gestion");
 	}
 }

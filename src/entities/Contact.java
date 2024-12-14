@@ -2,16 +2,16 @@ package entities;
 
 import database.databaseUtilities.SqlEntity;
 
-/**Entity linked to a @Fournisseur that holds the personal human information them.
- *
+/**
+ * Entity linked to a @Fournisseur that holds the personal human information them.
  */
 public class Contact extends SqlEntity {
-	private int id;
-	private String nom;
-	private String prenom;
-	private String fonction;
-	private String numTel;
-	private String eMail;
+    private int id;
+    private String nom;
+    private String prenom;
+    private String fonction;
+    private String numTel;
+    private String eMail;
 
     public void setId(int id) {
         this.id = id;
@@ -35,6 +35,8 @@ public class Contact extends SqlEntity {
         this.fonction = fonction;
         this.numTel = numTel;
         this.eMail = eMail;
+
+        this.createValues(this);
     }
 
     public int getId() {
@@ -80,20 +82,4 @@ public class Contact extends SqlEntity {
     public void seteMail(String eMail) {
         this.eMail = eMail;
     }
-
-    @Override
-    public void getStruct() {
-
-        super.getStruct(Contact.tableName);
-
-
-		// doubler les apostrophes pour éviter les pb de sql
-		/*this.values = "('" +
-				this.nom.replace("'", "''") + "', '" +
-				this.prenom.replace("'", "''") + "', '" +
-				this.fonction.replace("'", "''") + "', '" +
-				this.numTel.replace("'", "''") + "', " +
-				this.eMail.replace("'", "''") + "'" +
-				")";*/
-	}
 }

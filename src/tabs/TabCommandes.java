@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import main.Main;
 import tabs.popup.UpdateLotAchatPopup;
 import tabs.tabUtilities.TabTemplate;
 
@@ -195,23 +196,24 @@ public class TabCommandes implements TabTemplate {
     private void supprimerCommande(LotAchat lot) {
         LotAchatDAO lotAchatDAO = new LotAchatDAO();
         lotAchatDAO.deleteEntity(lot);
-        // TODO regen
+        Main.getInstance().recreateTab("Commandes");
     }
 
     private void modifierCommande(LotAchat lot) {
         new UpdateLotAchatPopup(lot);
     }
 
-    private void ajouterCommande(Contrat contrat, double quantite, double min, LocalDate dateAchat, LocalDate datePeremption) throws LotAchatQuantityException {
+    private void ajouterCommande(Contrat contrat, float quantite, double min, LocalDate dateAchat, LocalDate datePeremption) throws LotAchatQuantityException {
         if (quantite < min) throw new LotAchatQuantityException(contrat, min);
         LotAchatDAO lotAchatDAO = new LotAchatDAO();
         lotAchatDAO.insertInTable(new LotAchat(1, contrat.getId(), quantite, dateAchat, datePeremption));
-        // TODO regénérer la fenêtre pour update le contenu
+        Main.getInstance().recreateTab("Commandes");
     }
 
     private void validerCommande(LotAchat lot) {
         LotAchatDAO lotAchatDAO = new LotAchatDAO();
         lot.setDateAchat(LocalDate.now());
         lotAchatDAO.modifyEntity(lot);
+        Main.getInstance().recreateTab("Commandes");
     }
 }

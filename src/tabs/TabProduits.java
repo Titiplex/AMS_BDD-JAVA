@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import main.Main;
 import tabs.tabUtilities.TabTemplate;
 
 import java.util.Comparator;
@@ -107,16 +108,13 @@ public class TabProduits implements TabTemplate {
         // on ajoute
         btnAjouter.setOnAction(e -> {
             Produit produit = new Produit(
-                    // TODO récupérer l'id du produit après insertion
                     1,
                     Float.parseFloat(prixActuel.getText()),
                     nom.getText(),
                     description.getText(),
                     mesure.getText()
             );
-            produitDAO.insertInTable(produit);
-            categorieDAO.setTemporaryID(produit.getId());
-            categorieDAO.insertInTable(categorieComboBox.getValue());
+            ajouterProduit(produit, categorieComboBox);
         });
 
         addProductForm.getChildren().addAll(nom, description, mesure, prixActuel, categorieComboBox, btnAjouter);
@@ -150,12 +148,6 @@ public class TabProduits implements TabTemplate {
         alert.showAndWait();
     }
 
-    /**
-     * Calculate the average price of a product (considering stock)
-     *
-     * @param produitId
-     * @return
-     */
     private double calculatePrixMoyen(int produitId) {
         LotAchatDAO lotAchatDAO = new LotAchatDAO();
         ContratDAO contratDAO = new ContratDAO();
@@ -174,5 +166,14 @@ public class TabProduits implements TabTemplate {
         }
         if (numberOfProduct == 0) return 0;
         return totalPriceOfProduct / numberOfProduct;
+    }
+
+    private void ajouterProduit(Produit produit, ComboBox<Categorie> categorieComboBox) {
+        ProduitDAO produitDAO = new ProduitDAO();
+        CategorieDAO categorieDAO = new CategorieDAO();
+        produitDAO.insertInTable(produit);
+        categorieDAO.setTemporaryID(produit.getId());
+        categorieDAO.insertInTable(categorieComboBox.getValue());
+        Main.getInstance().recreateTab("Produits");
     }
 }

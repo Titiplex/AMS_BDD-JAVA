@@ -30,7 +30,7 @@ public class ContratDAO implements DAOInterface<Contrat> {
                 int rsId = rs.getInt("idcontrat");
                 int fournisseurId = rs.getInt("idfournisseur");
                 int idProduit = rs.getInt("idproduit");
-                int quantiteMin = rs.getInt("quantitemin");
+                float quantiteMin = rs.getFloat("quantitemin");
                 LocalDate dateDebut = rs.getDate("datedebut").toLocalDate();
                 LocalDate dateFin = rs.getDate("datefin").toLocalDate();
                 float prixFixe = rs.getFloat("prixfixe");
@@ -95,7 +95,7 @@ public class ContratDAO implements DAOInterface<Contrat> {
                 int rsId = rs.getInt("idcontrat");
                 int fournisseurId = rs.getInt("idfournisseur");
                 int idProduit = rs.getInt("idproduit");
-                int quantiteMin = rs.getInt("quantitemin");
+                float quantiteMin = rs.getFloat("quantitemin");
                 LocalDate dateDebut = rs.getDate("datedebut").toLocalDate();
                 LocalDate dateFin = rs.getDate("datefin").toLocalDate();
                 float prixFixe = rs.getFloat("prixfixe");

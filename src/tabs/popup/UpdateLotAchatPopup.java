@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.Main;
 
 import java.time.LocalDate;
 
@@ -57,6 +58,7 @@ public class UpdateLotAchatPopup {
             lotAchatDAO.modifyEntity(lot);
 
             popupStage.close(); // Fermer la fenêtre popup
+            Main.getInstance().recreateTab("Commandes");
         });
 
         // annuler

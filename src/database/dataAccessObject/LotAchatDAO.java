@@ -1,9 +1,7 @@
 package database.dataAccessObject;
 
 import database.databaseUtilities.ConnectDatabase;
-import database.databaseUtilities.DAOInterface;
 import database.databaseUtilities.JoinDAOInterface;
-import entities.Contact;
 import entities.LotAchat;
 import entities.Produit;
 
@@ -31,7 +29,7 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
             while (rs.next()) {
                 int rsId = rs.getInt("idlotachat");
                 int contratId = rs.getInt("idcontrat");
-                double quantite = rs.getDouble("quantite");
+                float quantite = rs.getFloat("quantite");
                 LocalDate dateAchat = rs.getDate("dateachat").toLocalDate();
                 LocalDate datePeremption = rs.getDate("dateperemption").toLocalDate();
 
@@ -63,12 +61,12 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
     @Override
     public void modifyEntity(LotAchat entity) {
-		String query = "UPDATE ams_lotachat SET idcontrat = " + entity.getContratId()
+        String query = "UPDATE ams_lotachat SET idcontrat = " + entity.getContratId()
                 + ", quantite = " + entity.getQuantite()
                 + ", dateachat = '" + entity.getDateAchat() + "'"
                 + ", dateperemption = '" + entity.getDatePeremption() + "'"
                 + " WHERE idlotachat = " + entity.getId();
-        try{
+        try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.executeUpdate();
@@ -93,7 +91,7 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
                 // on part du principe que les identifiants sont uniques
                 int rsId = rs.getInt("idlotachat");
                 int contratId = rs.getInt("idcontrat");
-                double quantite = rs.getDouble("quantite");
+                float quantite = rs.getFloat("quantite");
                 LocalDate dateAchat = rs.getDate("dateachat").toLocalDate();
                 LocalDate datePeremption = rs.getDate("dateperemption").toLocalDate();
 
@@ -110,7 +108,7 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
     @Override
     public void deleteEntity(LotAchat entity) {
-		String query = "DELETE FROM ams_lotachat WHERE idlotachat = " + entity.getId();
+        String query = "DELETE FROM ams_lotachat WHERE idlotachat = " + entity.getId();
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -137,7 +135,7 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
                 // on part du principe que les identifiants sont uniques
                 int rsId = rs.getInt("idlotachat");
                 int contratId = rs.getInt("idcontrat");
-                double quantite = rs.getDouble("quantite");
+                Float quantite = rs.getFloat("quantite");
                 LocalDate dateAchat = rs.getDate("dateachat").toLocalDate();
                 LocalDate datePeremption = rs.getDate("dateperemption").toLocalDate();
 

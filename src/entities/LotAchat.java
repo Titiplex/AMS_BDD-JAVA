@@ -8,11 +8,11 @@ public class LotAchat extends SqlEntity {
 
     private int id;
     private int idContrat;
-    private int quantite;
+    private float quantite;
     private LocalDate dateAchat;
     private LocalDate datePeremption;
 
-    public LotAchat(int id, int idContrat, int quantite, LocalDate dateAchat, LocalDate datePeremption) {
+    public LotAchat(int id, int idContrat, float quantite, LocalDate dateAchat, LocalDate datePeremption) {
         super("ams_lotachat");
 
         this.id = id;
@@ -20,6 +20,8 @@ public class LotAchat extends SqlEntity {
         this.quantite = quantite;
         this.dateAchat = dateAchat;
         this.datePeremption = datePeremption;
+
+        this.createValues(this);
     }
 
     public void setQuantite(int quantite) {
@@ -42,7 +44,7 @@ public class LotAchat extends SqlEntity {
         return idContrat;
     }
 
-    public int getQuantite() {
+    public float getQuantite() {
         return quantite;
     }
 
@@ -56,14 +58,5 @@ public class LotAchat extends SqlEntity {
 
     public LocalDate getDatePeremption() {
         return datePeremption;
-    }
-
-    @Override
-    public void getStruct() {
-
-        super.getStruct(LotAchat.tableName);
-
-        // doubler les apostrophes pour éviter les pb de sql
-        /*this.values = "(" + this.idContrat + ", " + this.quantite + ", '" + this.dateAchat.toString() + "', '" + this.datePeremption.toString() + "'" + ")";*/
     }
 }

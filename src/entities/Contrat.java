@@ -9,12 +9,12 @@ public class Contrat extends SqlEntity {
     private int id;
     private int idProduit;
     private int numSiret;
-    private int quantiteMin;
+    private float quantiteMin;
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private float prixFixe;
 
-    public Contrat(int id, int numSiret, int idProduit, int quantiteMin, LocalDate dateDebut, LocalDate dateFin, float prixFixe) {
+    public Contrat(int id, int numSiret, int idProduit, float quantiteMin, LocalDate dateDebut, LocalDate dateFin, float prixFixe) {
         super("ams_contrat");
         this.id = id;
         this.numSiret = numSiret;
@@ -23,6 +23,8 @@ public class Contrat extends SqlEntity {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.prixFixe = prixFixe;
+
+        this.createValues(this);
     }
 
     public int getId() {
@@ -41,7 +43,7 @@ public class Contrat extends SqlEntity {
         return idProduit;
     }
 
-    public int getQuantiteMin() {
+    public float getQuantiteMin() {
         return quantiteMin;
     }
 
@@ -55,22 +57,5 @@ public class Contrat extends SqlEntity {
 
     public float getPrixFixe() {
         return prixFixe;
-    }
-
-    @Override
-    public void getStruct() {
-
-        super.getStruct("ams_contrat");
-
-        // floatr les apostrophes pour éviter les pb de sql
-       /* this.values = "(" +
-                this.id + ", '" +
-                this.numSiret + ", " +
-                this.idProduit + ", " +
-                this.quantiteMin + ", '" +
-                this.dateDebut.toString() + "', '" +
-                this.dateFin.toString() + "', " +
-                this.prixFixe +
-                ")";
     }
 }

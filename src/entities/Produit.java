@@ -27,18 +27,15 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
             this.id = id;
             validateProductName(nom);
             this.prixVenteActuel = prixVenteActuel;
-            //validateMesure(mesure);
+            validateMesure(mesure);
             this.mesure = mesure;
             this.nom = nom;
             this.description = description;
-        } catch (ProductNameLengthException e) {
-            System.out.println("Erreur de construction : " + e.getMessage());
+        } catch (MesureTypeException | ProductNameLengthException e) {
+            e.printStackTrace();
+        } finally {
+            this.createValues(this);
         }
-		/*
-		catch (MesureTypeException e) {
-			System.out.println("Erreur Achat : " + e.getMessage());
-		}
-		 */
     }
 
     public void setter(String nom, String description, String categorie, String mesure, float prixVenteActuel) {
@@ -114,26 +111,12 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
      * @throws MesureTypeException if the measure type isn't compatible.
      */
     private void validateMesure(String mesure) throws MesureTypeException {
-        if (mesure != "U" || mesure != "kg")
+        if (!mesure.equals("U") && !mesure.equals("kg"))
             throw new MesureTypeException("Mesure \"" + mesure + "\" du produit incompatible !");
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Override
-    public void getStruct() {
-
-        super.getStruct(Produit.tableName);
-
-        // doubler les apostrophes pour éviter les pb de sql
-       /* this.values = "('" +
-                this.nom.replace("'", "''") + "', " +
-				this.prixVenteActuel + ", '" +
-                this.mesure.replace("'", "''") + "', '" +
-				this.description.replace("'", "''") + "'" +
-                ")";*/
     }
 
     @Override

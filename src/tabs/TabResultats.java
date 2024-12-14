@@ -42,7 +42,7 @@ public class TabResultats implements TabTemplate {
         sortComboBox.setOnAction(e -> {
             String selectedOption = sortComboBox.getValue();
             if ("Trier par Quantité".equals(selectedOption)) {
-                listVentes.sort(Comparator.comparingInt(Vente::getQuantity).reversed());
+                listVentes.sort(Comparator.comparingDouble(Vente::getQuantity).reversed());
             } else if ("Trier par Bénéfice".equals(selectedOption)) {
                 listVentes.sort((vente1, vente2) -> {
                     double benefice1 = getBenefice(vente1, new ContratDAO().getById(new LotAchatDAO().getById(vente1.getIdLotAchat()).getContratId()));

@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.Main;
 
 public class ContactCreationPopup {
     public ContactCreationPopup() {
@@ -57,6 +58,7 @@ public class ContactCreationPopup {
             contactDAO.insertInTable(newContact);
 
             popupStage.close(); // Fermer la fenêtre popup
+            Main.getInstance().recreateTab("Gestion");
         });
 
         // annuler

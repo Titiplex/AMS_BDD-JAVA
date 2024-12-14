@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import main.Main;
 import tabs.tabUtilities.TabTemplate;
 
 import java.time.LocalDate;
@@ -102,5 +103,7 @@ public class TabVentes implements TabTemplate {
     private void createVente(LotAchat lot, Produit produit, LocalDate date, int quantite) {
         VenteDAO venteDAO = new VenteDAO();
         venteDAO.insertInTable(new Vente(1, lot.getId(), produit.getPrixVenteActuel(), date, quantite));
+        Main.getInstance().recreateTab("Ventes");
+        Main.getInstance().recreateTab("Resultats");
     }
 }
