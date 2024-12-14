@@ -8,7 +8,7 @@ import entities.Contrat;
 import entities.Fournisseur;
 import entities.LotAchat;
 import entities.Produit;
-import exceptions.LotAchatQuantityException;
+import exceptions.entityAttributesExceptions.LotAchatQuantityException;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;

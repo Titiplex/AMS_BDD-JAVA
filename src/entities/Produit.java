@@ -2,8 +2,8 @@ package entities;
 
 import database.databaseUtilities.SetterInterface;
 import database.databaseUtilities.SqlEntity;
-import exceptions.MesureTypeException;
-import exceptions.ProductNameLengthException;
+import exceptions.entityAttributesExceptions.MesureTypeException;
+import exceptions.entityAttributesExceptions.ProductNameLengthException;
 
 
 public class Produit extends SqlEntity implements SetterInterface<Produit> {
