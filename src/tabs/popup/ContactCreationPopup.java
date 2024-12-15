@@ -3,8 +3,11 @@ package tabs.popup;
 import database.dataAccessObject.ContactDAO;
 import entities.Contact;
 import entities.Fournisseur;
+import exceptions.EmptyFieldException;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -12,7 +15,7 @@ import javafx.stage.Stage;
 import main.Main;
 
 public class ContactCreationPopup {
-    public ContactCreationPopup(Fournisseur fournisseur) {
+    public ContactCreationPopup(Fournisseur fournisseur) throws EmptyFieldException {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -47,9 +50,7 @@ public class ContactCreationPopup {
             String fonction = fonctionField.getText();
 
             if (name.isEmpty() || firstName.isEmpty() || email.isEmpty() || phone.isEmpty() || fonction.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Veuillez remplir tous les champs.", ButtonType.OK);
-                alert.showAndWait();
-                return;
+                throw new EmptyFieldException("Creation contact");
             }
 
             // ajouter

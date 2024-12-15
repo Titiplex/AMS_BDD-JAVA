@@ -8,6 +8,7 @@ import entities.Contrat;
 import entities.Fournisseur;
 import entities.LotAchat;
 import entities.Produit;
+import exceptions.EmptyFieldException;
 import exceptions.entityAttributesExceptions.LotAchatQuantityException;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class TabCommandes implements TabTemplate {
 
     @Override
-    public ScrollPane createTab() {
+    public ScrollPane createTab() throws EmptyFieldException {
         VBox root = new VBox(20); // Conteneur principal vertical
         root.setStyle("-fx-padding: 10;");
 
@@ -172,17 +173,16 @@ public class TabCommandes implements TabTemplate {
 
                 Contrat finalTempoContrat = tempoContrat;
                 btnAjouter.setOnAction(b -> {
-                    try {
-                        ajouterCommande(
-                                finalTempoContrat,
-                                Integer.parseInt(quantiteField.getText()),
-                                finalTempoContrat.getQuantiteMin(),
-                                dateBuying.getValue(),
-                                datePeremption.getValue()
-                        );
-                    } catch (LotAchatQuantityException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    if (quantiteField.getText().isEmpty() || dateBuying.getValue() == null || datePeremption.getValue() == null)
+                        throw new EmptyFieldException("Creation Commande");
+                    ajouterCommande(
+                            finalTempoContrat,
+                            Integer.parseInt(quantiteField.getText()),
+                            finalTempoContrat.getQuantiteMin(),
+                            dateBuying.getValue(),
+                            datePeremption.getValue()
+                    );
+
                 });
             });
         });

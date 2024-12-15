@@ -4,6 +4,6 @@ import exceptions.ApplicationException;
 
 public abstract class EntityAttributeException extends ApplicationException {
     public EntityAttributeException(String message) {
-        super(message);
+        super(message, new Throwable("Wrong Attribute"));
     }
 }

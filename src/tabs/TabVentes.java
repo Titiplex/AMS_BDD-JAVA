@@ -7,6 +7,7 @@ import database.dataAccessObject.VenteDAO;
 import entities.LotAchat;
 import entities.Produit;
 import entities.Vente;
+import exceptions.EmptyFieldException;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -22,8 +23,7 @@ import java.util.List;
 public class TabVentes implements TabTemplate {
 
     @Override
-    public Node createTab() {
-        // TODO faire les erreurs et exceptions
+    public Node createTab() throws EmptyFieldException {
         VBox root = new VBox(20);
         root.setStyle("-fx-padding: 10;");
 
@@ -65,8 +65,8 @@ public class TabVentes implements TabTemplate {
         // boutton
         Button addVenteButton = new Button("Ajouter Vente");
         addVenteButton.setOnAction(e -> {
-
             Produit produit = produitComboBox.getValue();
+            if (quantiteField.getText().isEmpty() || produit == null) throw new EmptyFieldException("Creation Vente");
 
             List<LotAchat> listLotsProduit = lotAchatDAO.listAllFromParameter(produit);
             listLotsProduit.sort(Comparator.comparing(lot -> LocalDate.parse("" + lot.getDatePeremption())));

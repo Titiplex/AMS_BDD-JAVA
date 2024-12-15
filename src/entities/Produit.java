@@ -100,7 +100,7 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
      */
     private void validateProductName(String nom) throws ProductNameLengthException {
         if (nom.length() > 15) {
-            throw new ProductNameLengthException("Le nom du produit " + nom + " ne peut excéder 15 caractères.");
+            throw new ProductNameLengthException();
         }
     }
 
@@ -111,8 +111,8 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
      * @throws MesureTypeException if the measure type isn't compatible.
      */
     private void validateMesure(String mesure) throws MesureTypeException {
-        if (!mesure.equals("U") && !mesure.equals("kg"))
-            throw new MesureTypeException("Mesure \"" + mesure + "\" du produit incompatible !");
+        if (!mesure.equals("U") && !mesure.equals("kg") && !mesure.equals("L"))
+            throw new MesureTypeException();
     }
 
     public void setId(int id) {

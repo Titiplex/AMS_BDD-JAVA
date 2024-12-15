@@ -2,8 +2,12 @@ package tabs.popup;
 
 import database.dataAccessObject.LotAchatDAO;
 import entities.LotAchat;
+import exceptions.EmptyFieldException;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -13,7 +17,7 @@ import main.Main;
 import java.time.LocalDate;
 
 public class UpdateLotAchatPopup {
-    public UpdateLotAchatPopup(LotAchat lot) {
+    public UpdateLotAchatPopup(LotAchat lot) throws EmptyFieldException {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -43,10 +47,8 @@ public class UpdateLotAchatPopup {
             LocalDate buyingDate = buyingDatePicker.getValue();
             LocalDate peremptionDate = peremptionDatePicker.getValue();
 
-            if (quantityString.isEmpty() || buyingDatePicker.getValue() == null || peremptionDatePicker.getValue() == null) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Veuillez remplir tous les champs.", ButtonType.OK);
-                alert.showAndWait();
-                return;
+            if (quantityString.isEmpty() || buyingDatePicker.getValue() == null || peremptionDatePicker.getValue() == null || quantity == 0) {
+                throw new EmptyFieldException("Mis à jour lot");
             }
 
             // ajouter

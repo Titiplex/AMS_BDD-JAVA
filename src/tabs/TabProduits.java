@@ -8,6 +8,7 @@ import entities.Categorie;
 import entities.Contrat;
 import entities.LotAchat;
 import entities.Produit;
+import exceptions.EmptyFieldException;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,7 +24,7 @@ import static tabs.tabUtilities.TabUtilitiesMethodes.getRemainingLot;
 public class TabProduits implements TabTemplate {
 
     @Override
-    public ScrollPane createTab() {
+    public ScrollPane createTab() throws EmptyFieldException {
         VBox root = new VBox(20); // Conteneur principal vertical
         root.setStyle("-fx-padding: 10;");
         ProduitDAO produitDAO = new ProduitDAO();
@@ -107,6 +108,8 @@ public class TabProduits implements TabTemplate {
 
         // on ajoute
         btnAjouter.setOnAction(e -> {
+            if (nom.getText().isEmpty() || description.getText().isEmpty() || mesure.getText().isEmpty() || prixActuel.getText().isEmpty() || categorieComboBox.getValue() == null)
+                throw new EmptyFieldException("Creation Produit");
             Produit produit = new Produit(
                     1,
                     Float.parseFloat(prixActuel.getText()),

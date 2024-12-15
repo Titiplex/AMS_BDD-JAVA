@@ -8,6 +8,7 @@ import entities.Contact;
 import entities.Contrat;
 import entities.Fournisseur;
 import entities.Produit;
+import exceptions.EmptyFieldException;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,7 +24,7 @@ import java.util.List;
 public class TabGestion implements TabTemplate {
 
     @Override
-    public ScrollPane createTab() {
+    public ScrollPane createTab() throws EmptyFieldException {
         VBox root = new VBox(20); // Conteneur principal vertical
         root.setStyle("-fx-padding: 10;");
         Label title = new Label("Gestion des Fournisseurs");
@@ -149,29 +150,31 @@ public class TabGestion implements TabTemplate {
 
         fournisseurInfoBox.getChildren().addAll(fournisseurInfoTitle, fournisseurName, fournisseurSiret, fournisseurAdresse, fournisseurEmail);
 
-		// ajouter fournisseur
-		HBox addFournisseurBox = new HBox(20);
+        // ajouter fournisseur
+        HBox addFournisseurBox = new HBox(20);
 
-		Label numSiretLabel = new Label("Numéro de Siret:");
-		TextField numSiretField = new TextField();
-		Label nomSocieteLabel = new Label("Nom:");
-		TextField nomSocieteField = new TextField();
-		Label adresseLabel = new Label("Adresse:");
-		TextField adresseField = new TextField();
-		Label emailLabel = new Label("E-mail:");
-		TextField emailField = new TextField();
+        Label numSiretLabel = new Label("Numéro de Siret:");
+        TextField numSiretField = new TextField();
+        Label nomSocieteLabel = new Label("Nom:");
+        TextField nomSocieteField = new TextField();
+        Label adresseLabel = new Label("Adresse:");
+        TextField adresseField = new TextField();
+        Label emailLabel = new Label("E-mail:");
+        TextField emailField = new TextField();
 
-		Button addFournisseurButton = new Button("Ajouter");
-		addFournisseurButton.setOnAction(a -> {
-			createFournisseur(
-					Integer.parseInt(numSiretField.getText()),
-					nomSocieteField.getText(),
-					adresseField.getText(),
-					emailField.getText()
-			);
-		});
+        Button addFournisseurButton = new Button("Ajouter");
+        addFournisseurButton.setOnAction(a -> {
+            if (numSiretField.getText().isEmpty() || nomSocieteField.getText().isEmpty() || adresseField.getText().isEmpty() || emailField.getText().isEmpty())
+                throw new EmptyFieldException("Creation Fournisseur");
+            createFournisseur(
+                    Integer.parseInt(numSiretField.getText()),
+                    nomSocieteField.getText(),
+                    adresseField.getText(),
+                    emailField.getText()
+            );
+        });
 
-		addFournisseurBox.getChildren().addAll(numSiretLabel, numSiretField, nomSocieteLabel, nomSocieteField, adresseLabel, adresseField, emailLabel, emailField, addFournisseurButton);
+        addFournisseurBox.getChildren().addAll(numSiretLabel, numSiretField, nomSocieteLabel, nomSocieteField, adresseLabel, adresseField, emailLabel, emailField, addFournisseurButton);
 
         root.getChildren().addAll(title, addFournisseurBox, fournisseurComboBox, fournisseurInfoBox);
 
@@ -180,14 +183,14 @@ public class TabGestion implements TabTemplate {
         return scrollPane;
     }
 
-	private void createFournisseur(int numSiret, String nomSociete, String adresse, String email) {
-		FournisseurDAO fournisseurDAO = new FournisseurDAO();
-		fournisseurDAO.insertInTable(new Fournisseur(
-				nomSociete,
-				numSiret,
-				adresse,
-				email
-		));
+    private void createFournisseur(int numSiret, String nomSociete, String adresse, String email) {
+        FournisseurDAO fournisseurDAO = new FournisseurDAO();
+        fournisseurDAO.insertInTable(new Fournisseur(
+                nomSociete,
+                numSiret,
+                adresse,
+                email
+        ));
         Main.getInstance().recreateTab("Gestion");
-	}
+    }
 }

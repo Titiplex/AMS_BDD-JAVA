@@ -6,6 +6,7 @@ import database.dataAccessObject.ProduitDAO;
 import entities.Contrat;
 import entities.Fournisseur;
 import entities.Produit;
+import exceptions.EmptyFieldException;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -19,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ContratCreationPopup {
-    public ContratCreationPopup() {
+    public ContratCreationPopup() throws EmptyFieldException {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -94,10 +95,8 @@ public class ContratCreationPopup {
             int numSiret = fournisseurComboBox.getValue().getNumSiret();
             int idProduit = produitComboBox.getValue().getId();
 
-            if (quantiteMin.isEmpty() || prixFixe.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Veuillez remplir tous les champs.", ButtonType.OK);
-                alert.showAndWait();
-                return;
+            if (quantiteMin.isEmpty() || prixFixe.isEmpty() || startDatePicker.getValue() == null || endDatePicker.getValue() == null || numSiret == 0 || idProduit == 0) {
+                throw new EmptyFieldException("Creation contact");
             }
 
             // Logique pour ajouter le contact à la base de données (ou la liste)

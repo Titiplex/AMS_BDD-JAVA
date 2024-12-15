@@ -96,7 +96,7 @@ public class TabStock implements TabTemplate {
             lotsContainer.getChildren().add(produitSection);
         }
 
-        // Ajouter tout au conteneur principal
+        // ajout conteneur principal
         root.getChildren().addAll(title, lotsContainer);
 
         ScrollPane scrollPane = new ScrollPane(root);
