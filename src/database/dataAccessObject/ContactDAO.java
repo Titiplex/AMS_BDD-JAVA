@@ -38,8 +38,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listContacts;
     }
@@ -54,8 +52,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
             if (rs.next()) entity.setId(rs.getInt("idcontact"));
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -73,8 +69,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -98,8 +92,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return contact;
     }
@@ -113,8 +105,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -148,8 +138,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listContacts;
     }
@@ -169,8 +157,6 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 }

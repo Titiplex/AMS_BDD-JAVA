@@ -10,6 +10,10 @@ import entities.LotAchat;
 import entities.Produit;
 import exceptions.EmptyFieldException;
 import exceptions.entityAttributesExceptions.LotAchatQuantityException;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,16 +40,6 @@ public class TabCommandes implements TabTemplate {
         Label subTitle = new Label("Les commandes pour le lendemain sont passées automatiquement à minuit" +
                 "\nValidez pour passer une commande ultérieure directement aujourd'hui");
 
-        VBox commandesContainer = new VBox(10);
-        HBox labels = new HBox(10);
-        labels.getChildren().addAll(
-                new Label("Date d'achat"),
-                new Label("Nom du produit"),
-                new Label("Quantité"),
-                new Label("Prix total"),
-                new Label("Fournisseur")
-        );
-
         LotAchatDAO lotAchatDAO = new LotAchatDAO();
         ProduitDAO produitDAO = new ProduitDAO();
         ContratDAO contratDAO = new ContratDAO();
@@ -53,56 +47,113 @@ public class TabCommandes implements TabTemplate {
         List<LotAchat> lotAchatList = lotAchatDAO.listAll();
         LocalDate today = LocalDate.now();
 
-        List<String[]> commandes = new ArrayList<>(); // Utilisez une liste dynamique
+        TableView<LotAchat> tableView = new TableView<>();
+
+        TableColumn<LotAchat, String> dateAchatColumn = new TableColumn<>("Date d'achat");
+        dateAchatColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDateAchat().toString()));
+
+        TableColumn<LotAchat, String> produitNomColumn = new TableColumn<>("Nom du produit");
+        produitNomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+                produitDAO.getById(
+                                contratDAO.getById(cellData.getValue().getContratId())
+                                        .getIdProduit())
+                        .getNom()));
+
+        TableColumn<LotAchat, Float> quantityColumn = new TableColumn<>("Quantité");
+        quantityColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQuantite()));
+
+        TableColumn<LotAchat, Float> prixTotalColumn = new TableColumn<>("Prix total");
+        prixTotalColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(
+                produitDAO.getById(
+                                contratDAO.getById(cellData.getValue().getContratId())
+                                        .getIdProduit())
+                        .getPrixVenteActuel() * cellData.getValue().getQuantite()));
+
+        TableColumn<LotAchat, String> fournisseurColumn = new TableColumn<>("Fournisseur");
+        fournisseurColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+                fournisseurDAO.getById(contratDAO.getById(cellData.getValue().getContratId()).getnumSiret()).getNomSociete()
+        ));
+
+        TableColumn<LotAchat, Integer> idColumn = new TableColumn<>("ID du lot");
+        idColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId()));
+
+        TableColumn<LotAchat, Void> supprimerColumn = new TableColumn<>("Supprimer");
+        supprimerColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button supprimerButton = new Button("Supprimer");
+
+            {
+                supprimerButton.setOnAction(event -> {
+                    LotAchat lot = getTableView().getItems().get(getIndex());
+                    supprimerCommande(lot);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(supprimerButton);
+                }
+            }
+        });
+
+        TableColumn<LotAchat, Void> modifierColumn = new TableColumn<>("Modifier");
+        modifierColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button modifierButton = new Button("Modifier");
+
+            {
+                modifierButton.setOnAction(event -> {
+                    LotAchat lot = getTableView().getItems().get(getIndex());
+                    modifierCommande(lot);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(modifierButton);
+                }
+            }
+        });
+
+        TableColumn<LotAchat, Void> validerColumn = new TableColumn<>("Valider");
+        validerColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button validerButton = new Button("Valider");
+
+            {
+                validerButton.setOnAction(event -> {
+                    LotAchat lot = getTableView().getItems().get(getIndex());
+                    validerCommande(lot);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(validerButton);
+                }
+            }
+        });
+
+        tableView.getColumns().addAll(dateAchatColumn, produitNomColumn, quantityColumn, prixTotalColumn, fournisseurColumn, idColumn, supprimerColumn, modifierColumn, validerColumn);
+
+        ObservableList<LotAchat> data = FXCollections.observableArrayList();
 
         for (LotAchat lot : lotAchatList) {
             if (lot.getDateAchat().isAfter(today)) {
-                Contrat contrat = contratDAO.getById(lot.getContratId());
-                Produit produit = produitDAO.getById(contrat.getIdProduit());
-                Fournisseur fournisseur = fournisseurDAO.getById(contrat.getnumSiret());
-
-                commandes.add(new String[]{
-                        lot.getDateAchat().toString(),
-                        produit.getNom(),
-                        "" + lot.getQuantite(),
-                        "" + (produit.getPrixVenteActuel() * lot.getQuantite()),
-                        fournisseur.getNomSociete(),
-                        "" + lot.getId()
-                });
+                data.add(lot);
             }
         }
 
-
-        // on ajoute les commandes au container
-        for (String[] commande : commandes) {
-            HBox commandeRow = new HBox(10);
-            commandeRow.setStyle("-fx-padding: 5; -fx-border-color: lightgray; -fx-border-width: 1;");
-
-            VBox details = new VBox(5);
-            details.getChildren().addAll(
-                    new Label(commande[0] != null ? commande[0] : ""),
-                    new Label(commande[1] != null ? commande[1] : ""),
-                    new Label(commande[2] != null ? commande[2] : ""),
-                    new Label(commande[3] != null ? commande[3] : ""),
-                    new Label(commande[4] != null ? commande[4] : "")
-            );
-
-            // boutons d'actions
-            Button btnSupprimer = new Button("Supprimer");
-            Button btnModifier = new Button("Modifier");
-            Button btnValider = new Button("Valider");
-
-            btnSupprimer.setOnAction(e -> supprimerCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
-            btnModifier.setOnAction(e -> modifierCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
-            btnValider.setOnAction(e -> validerCommande(lotAchatDAO.getById(Integer.parseInt(commande[5]))));
-
-            VBox actions = new VBox(5);
-            actions.getChildren().addAll(btnModifier, btnSupprimer, btnValider);
-
-            // ajout final des lignes de commande
-            commandeRow.getChildren().addAll(details, actions);
-            commandesContainer.getChildren().add(commandeRow);
-        }
+        tableView.setItems(data);
 
         // ajout commande
         Label addCommandTitle = new Label("Ajouter une nouvelle commande");
@@ -189,7 +240,7 @@ public class TabCommandes implements TabTemplate {
 
         addCommandForm.getChildren().addAll(produitComboBox, contenu);
 
-        root.getChildren().addAll(title, addCommandTitle, addCommandForm, subTitle, commandesContainer);
+        root.getChildren().addAll(title, addCommandTitle, addCommandForm, subTitle, tableView);
 
         ScrollPane scrollPane = new ScrollPane(root);
         scrollPane.setFitToWidth(true);

@@ -37,8 +37,6 @@ public class VenteDAO implements DAOInterface<Vente> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listVentes;
     }
@@ -64,8 +62,6 @@ public class VenteDAO implements DAOInterface<Vente> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return vente;
     }
@@ -80,8 +76,6 @@ public class VenteDAO implements DAOInterface<Vente> {
             if (rs.next()) entity.setId(rs.getInt("idvente"));
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -99,8 +93,6 @@ public class VenteDAO implements DAOInterface<Vente> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -113,9 +105,6 @@ public class VenteDAO implements DAOInterface<Vente> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
-
 }

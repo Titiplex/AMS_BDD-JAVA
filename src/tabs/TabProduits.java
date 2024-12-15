@@ -9,6 +9,8 @@ import entities.Contrat;
 import entities.LotAchat;
 import entities.Produit;
 import exceptions.EmptyFieldException;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -34,40 +36,47 @@ public class TabProduits implements TabTemplate {
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 16;");
 
         // Conteneur pour la liste des produits
-        VBox produitsContainer = new VBox(10);
 
-        // string des produits
-        String[][] produits = new String[produitList.size()][4];
+        TableView<Produit> tableView = new TableView<>();
 
-        for (int i = 0; i < produitList.size(); i++) {
-            Produit produit = produitList.get(i);
-            produits[i][0] = "" + produit.getId();
-            produits[i][1] = produit.getNom();
-            produits[i][2] = "" + calculatePrixMoyen(produit.getId());
-            produits[i][3] = "" + produit.getPrixVenteActuel();
-        }
+        TableColumn<Produit, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getId()));
 
-        // produit avec details liste
-        for (String[] produit : produits) {
-            HBox produitRow = new HBox(20);
-            produitRow.setStyle("-fx-padding: 5; -fx-border-color: lightgray; -fx-border-width: 1;");
+        TableColumn<Produit, String> nomColumn = new TableColumn<>("Nom");
+        nomColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNom()));
 
-            // Informations sur le produit
-            VBox details = new VBox(5);
-            details.getChildren().addAll(
-                    new Label("Nom : " + produit[1]),
-                    new Label("Prix d'achat moyen : " + produit[2]),
-                    new Label("Prix de vente : " + produit[3])
-            );
+        TableColumn<Produit, Double> prixMoyenColumn = new TableColumn<>("Prix d'achat unitaire moyen");
+        prixMoyenColumn.setCellValueFactory(data ->
+                new SimpleObjectProperty<>(calculatePrixMoyen(data.getValue().getId()))
+        );
 
-            // Bouton pour afficher plus d'informations
-            Button btnAfficher = new Button("Afficher");
-            btnAfficher.setOnAction(e -> afficherDetailsProduit(Integer.parseInt(produit[0])));
+        TableColumn<Produit, Float> prixVenteColumn = new TableColumn<>("Prix de vente unitaire");
+        prixVenteColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPrixVenteActuel()));
 
-            // Ajouter les détails et le bouton au HBox
-            produitRow.getChildren().addAll(details, btnAfficher);
-            produitsContainer.getChildren().add(produitRow);
-        }
+        TableColumn<Produit, Void> actionColumn = new TableColumn<>("Actions");
+        actionColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button afficherButton = new Button("Afficher");
+
+            {
+                afficherButton.setOnAction(event -> {
+                    Produit produit = getTableView().getItems().get(getIndex());
+                    afficherDetailsProduit(produit.getId());
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(afficherButton);
+                }
+            }
+        });
+
+        tableView.getColumns().addAll(idColumn, nomColumn, prixMoyenColumn, prixVenteColumn, actionColumn);
+        tableView.getItems().addAll(produitList);
 
         // ajout produit
         Label addProductTitle = new Label("Ajouter un nouveau produit");
@@ -123,7 +132,7 @@ public class TabProduits implements TabTemplate {
         addProductForm.getChildren().addAll(nom, description, mesure, prixActuel, categorieComboBox, btnAjouter);
 
         // Ajouter toutes les sections au conteneur principal
-        root.getChildren().addAll(title, addProductTitle, addProductForm, produitsContainer);
+        root.getChildren().addAll(title, addProductTitle, addProductForm, tableView);
 
         ScrollPane scrollPane = new ScrollPane(root);
         scrollPane.setFitToWidth(true);

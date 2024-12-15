@@ -8,6 +8,10 @@ import entities.LotAchat;
 import entities.Produit;
 import entities.Vente;
 import exceptions.EmptyFieldException;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -71,31 +75,48 @@ public class TabVentes implements TabTemplate {
             List<LotAchat> listLotsProduit = lotAchatDAO.listAllFromParameter(produit);
             listLotsProduit.sort(Comparator.comparing(lot -> LocalDate.parse("" + lot.getDatePeremption())));
 
-            createVente(listLotsProduit.get(0), produit, LocalDate.now(), Integer.parseInt(quantiteField.getText()));
+            createVente(listLotsProduit.getFirst(), produit, LocalDate.now(), Integer.parseInt(quantiteField.getText()));
         });
 
         formBox.getChildren().addAll(produitLabel, produitComboBox, quantiteLabel, quantiteField, addVenteButton);
 
         // liste ventes journée
-        VBox ventesBox = new VBox(10);
-        ventesBox.setStyle("-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1;");
+
         Label ventesTitle = new Label("Ventes de la journée");
         ventesTitle.setStyle("-fx-font-weight: bold;");
 
-        ListView<String> ventesListView = new ListView<>();
-        ventesListView.getItems().add("ID Vente\t\t\tProduit\t\t\tQuantité\t\t\tPrix Moment");
+        TableView<Vente> tableView = new TableView<>();
+
+        TableColumn<Vente, Integer> column1 = new TableColumn<>("ID Vente");
+        column1.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId()));
+
+        TableColumn<Vente, String> column2 = new TableColumn<>("Produit");
+        column2.setCellValueFactory(cellData -> new SimpleStringProperty(
+                produitDAO.getById(
+                                contratDAO.getById(
+                                        lotAchatDAO.getById(cellData.getValue().getIdLotAchat())
+                                                .getContratId()).getIdProduit())
+                        .getNom()));
+
+        TableColumn<Vente, Float> column3 = new TableColumn<>("Quantité");
+        column3.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQuantity()));
+
+        TableColumn<Vente, Float> column4 = new TableColumn<>("Prix unitaire sur le moment");
+        column4.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getPrixDuMoment()));
+
+        tableView.getColumns().addAll(column1, column2, column3, column4);
+
+        ObservableList<Vente> data = FXCollections.observableArrayList();
 
         venteList.sort(Comparator.comparing(vente -> LocalDate.parse("" + vente.getDateAchat())));
         for (Vente vente : venteList) {
             if (vente.getDateAchat().equals(LocalDate.now()))
-                ventesListView.getItems().addAll(vente.getId() + "\t\t\t\t"
-                        + produitDAO.getById(contratDAO.getById(lotAchatDAO.getById(vente.getIdLotAchat()).getContratId()).getIdProduit()).getNom() + "\t\t\t"
-                        + vente.getQuantity() + "\t\t\t"
-                        + vente.getPrixDuMoment());
+                data.add(vente);
         }
-        ventesBox.getChildren().addAll(ventesTitle, ventesListView);
 
-        root.getChildren().addAll(title, formBox, ventesBox);
+        tableView.setItems(data);
+
+        root.getChildren().addAll(title, formBox, ventesTitle, tableView);
 
         return root;
     }

@@ -37,8 +37,6 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listCategories;
     }
@@ -52,8 +50,6 @@ public class CategorieDAO implements DAOInterface<Categorie> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -67,8 +63,6 @@ public class CategorieDAO implements DAOInterface<Categorie> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -88,8 +82,6 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return categorie;
     }
@@ -103,8 +95,6 @@ public class CategorieDAO implements DAOInterface<Categorie> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 }

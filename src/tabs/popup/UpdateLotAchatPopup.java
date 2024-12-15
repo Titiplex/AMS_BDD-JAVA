@@ -42,7 +42,7 @@ public class UpdateLotAchatPopup {
         // enregistrer
         Button saveButton = new Button("Enregistrer");
         saveButton.setOnAction(saveEvent -> {
-            int quantity = Integer.parseInt(quantityField.getText());
+            float quantity = Float.parseFloat(quantityField.getText());
             String quantityString = quantityField.getText();
             LocalDate buyingDate = buyingDatePicker.getValue();
             LocalDate peremptionDate = peremptionDatePicker.getValue();

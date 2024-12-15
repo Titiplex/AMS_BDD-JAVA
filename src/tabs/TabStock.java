@@ -31,20 +31,21 @@ public class TabStock implements TabTemplate {
         ProduitDAO produitDAO = new ProduitDAO();
         ContratDAO contratDAO = new ContratDAO();
         List<LotAchat> lotAchatList = lotAchatDAO.listAll();
-        String[][] lots = new String[lotAchatList.size()][3];
         LocalDate today = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        for (int i = 0; i < lotAchatList.size(); i++) {
-
-            LotAchat lot = lotAchatList.get(i);
-
+        List<String[]> lotsListArray = new ArrayList<>();
+        for (LotAchat lot : lotAchatList) {
             if ((lot.getDatePeremption().isAfter(today) || lot.getDatePeremption().equals(today))
                     && (lot.getDateAchat().isBefore(today) || lot.getDateAchat().equals(today))) {
-                lots[i][0] = produitDAO.getById(contratDAO.getById(lot.getContratId()).getIdProduit()).getNom();
-                lots[i][1] = lot.getDatePeremption().toString();
-                lots[i][2] = "" + getRemainingLot(lot);
+                String[] entry = new String[3];
+                entry[0] = produitDAO.getById(contratDAO.getById(lot.getContratId()).getIdProduit()).getNom();
+                entry[1] = lot.getDatePeremption().toString();
+                entry[2] = "" + getRemainingLot(lot);
+                lotsListArray.add(entry);
             }
         }
+
+        String[][] lots = lotsListArray.toArray(new String[0][0]);
 
         // trier date écheance
         Arrays.sort(lots, Comparator.comparing(lot -> LocalDate.parse(lot[1])));

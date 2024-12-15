@@ -35,8 +35,6 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
 
         return listFournisseurs;
@@ -51,8 +49,6 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -77,8 +73,6 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return fournisseur;
     }
@@ -92,8 +86,6 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -110,8 +102,6 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 }

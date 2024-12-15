@@ -40,8 +40,6 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listContrats;
     }
@@ -56,8 +54,6 @@ public class ContratDAO implements DAOInterface<Contrat> {
             if (rs.next()) entity.setId(rs.getInt("idcontrat"));
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -76,8 +72,6 @@ public class ContratDAO implements DAOInterface<Contrat> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -105,8 +99,6 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return contrat;
     }
@@ -120,9 +112,6 @@ public class ContratDAO implements DAOInterface<Contrat> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
-
 }

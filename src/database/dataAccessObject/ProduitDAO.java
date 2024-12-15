@@ -38,8 +38,6 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listProduits;
     }
@@ -54,8 +52,6 @@ public class ProduitDAO implements DAOInterface<Produit> {
             if (rs.next()) entity.setId(rs.getInt("idproduit"));
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -81,8 +77,6 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return produit;
     }
@@ -101,8 +95,6 @@ public class ProduitDAO implements DAOInterface<Produit> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -115,8 +107,6 @@ public class ProduitDAO implements DAOInterface<Produit> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 }

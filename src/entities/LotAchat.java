@@ -24,7 +24,7 @@ public class LotAchat extends SqlEntity {
         this.createValues(this);
     }
 
-    public void setQuantite(int quantite) {
+    public void setQuantite(float quantite) {
         this.quantite = quantite;
     }
 

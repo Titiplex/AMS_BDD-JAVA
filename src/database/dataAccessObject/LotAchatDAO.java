@@ -38,8 +38,6 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listLotAchats;
     }
@@ -54,8 +52,6 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
             if (rs.next()) entity.setId(rs.getInt("idlotachat"));
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -72,11 +68,8 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
-
 
     @Override
     public LotAchat getById(int id) {
@@ -100,8 +93,6 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return lotAchat;
     }
@@ -115,8 +106,6 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
     }
 
@@ -144,8 +133,6 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDatabase.closeConnection();
         }
         return listlots;
     }

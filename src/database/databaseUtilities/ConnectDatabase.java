@@ -16,27 +16,32 @@ public class ConnectDatabase {
     private static final String USER = System.getenv("USER");
     private static final String PASSWORD = System.getenv("PASSWORD");
 
-    private static Connection conn;
+    private static Connection conn = null;
 
     public static Connection getConnection() {
+        // on ouvre trop de connections à chaque fois et on surcharge le serveur
+        // solution : une connection que l'on ferme quand l'application se ferme
+        if (ConnectDatabase.conn == null) {
+            try {
+                Properties props = new Properties();
+                props.setProperty("user", ConnectDatabase.USER);
+                props.setProperty("password", ConnectDatabase.PASSWORD);
 
-        Properties props = new Properties();
-        props.setProperty("user", ConnectDatabase.USER);
-        props.setProperty("password", ConnectDatabase.PASSWORD);
-        //props.setProperty("ssl", "true");
-
-        try {
-            ConnectDatabase.conn = DriverManager.getConnection(URL, props);
-        } catch (SQLException e) {
-            e.printStackTrace();
+                ConnectDatabase.conn = DriverManager.getConnection(URL, props);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+                System.out.println("Database connection established.");
+            }
         }
+
         return ConnectDatabase.conn;
     }
 
     /**
      * Closes the connection with postgresql database.
      */
-    public static void closeConnection() {
+    private static void closeConnection() {
         try {
             if (ConnectDatabase.conn != null && !ConnectDatabase.conn.isClosed()) {
                 ConnectDatabase.conn.close();
@@ -45,5 +50,12 @@ public class ConnectDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Ferme la connexion automatiquement lorsque l'application se termine.
+     */
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(ConnectDatabase::closeConnection));
     }
 }

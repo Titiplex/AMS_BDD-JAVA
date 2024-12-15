@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 /**
@@ -41,7 +42,6 @@ public abstract class SqlEntity {
                     String datatype = columns.getString("DATA_TYPE");
                     struct.put(columnName, FieldType.getFieldType(datatype));
                 }
-                conn.close();
                 hashmapInitialized = true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -108,6 +108,8 @@ public abstract class SqlEntity {
                     this.values += standardValue + ", ";
                 } else if (fieldValue instanceof Number) {
                     this.values += fieldValue + ", ";
+                } else if (fieldValue instanceof LocalDate) {
+                    this.values += "'" + fieldValue + "', ";
                 }
             } catch (IllegalAccessException e) {
                 System.out.println("Impossible d'accéder au champ : " + field.getName());
