@@ -13,4 +13,7 @@ public class Categorie {
     public String getCategorie() {
         return categorie;
     }
+    public void setId(int id) {
+        this.id = id;
+    }
 }

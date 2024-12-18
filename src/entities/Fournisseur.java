@@ -22,6 +22,8 @@ public class Fournisseur extends SqlEntity {
         return nomSociete;
     }
 
+
+    //doublon au cas ou
     public void setNomSociete(String nomSociete) {
         this.nomSociete = nomSociete;
     }
@@ -48,5 +50,10 @@ public class Fournisseur extends SqlEntity {
 
     public void seteMailPrincipal(String eMailPrincipal) {
         this.eMailPrincipal = eMailPrincipal;
+    }
+
+    @Override
+    public void setId(int id) {
+    this.numSiret=id;
     }
 }

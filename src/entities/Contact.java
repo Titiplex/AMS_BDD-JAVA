@@ -82,4 +82,5 @@ public class Contact extends SqlEntity {
     public void seteMail(String eMail) {
         this.eMail = eMail;
     }
+
 }

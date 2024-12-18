@@ -119,6 +119,7 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
         this.id = id;
     }
 
+
     @Override
     public void setter(Produit produit) {
         // TODO Auto-generated method stub

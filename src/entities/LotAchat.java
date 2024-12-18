@@ -59,4 +59,5 @@ public class LotAchat extends SqlEntity {
     public LocalDate getDatePeremption() {
         return datePeremption;
     }
+
 }

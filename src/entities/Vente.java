@@ -46,4 +46,5 @@ public class Vente extends SqlEntity {
     public void setId(int id) {
         this.id = id;
     }
+
 }
