@@ -8,6 +8,13 @@ public class Fournisseur extends SqlEntity {
     private String adresse;
     private String eMailPrincipal;
 
+    public Fournisseur() {
+        super();
+        numSiret = 0;
+        nomSociete = "";
+        adresse = "";
+        eMailPrincipal = "";
+    }
     public Fournisseur(String nomSociete, int numSiret, String adresse, String eMailPrincipal) {
         super("ams_fournisseur");
         this.nomSociete = nomSociete;

@@ -14,6 +14,14 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
     private String mesure;
     private String description;
 
+    public Produit() {
+        super();
+        id=0;
+        nom="";
+        prixVenteActuel=0;
+        mesure="";
+        description="";
+    }
     /**
      * @param id
      * @param prixVenteActuel

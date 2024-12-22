@@ -12,6 +12,15 @@ public class LotAchat extends SqlEntity {
     private LocalDate dateAchat;
     private LocalDate datePeremption;
 
+    public LotAchat() {
+        super();
+        id=0;
+        idContrat=0;
+        quantite=0;
+        dateAchat=LocalDate.now();
+        datePeremption=LocalDate.now();
+    }
+
     public LotAchat(int id, int idContrat, float quantite, LocalDate dateAchat, LocalDate datePeremption) {
         super("ams_lotachat");
 

@@ -13,6 +13,16 @@ public class Contact extends SqlEntity {
     private String numTel;
     private String eMail;
 
+    public Contact(){
+        super();
+        id=0;
+        nom="";
+        prenom="";
+        fonction="";
+        numTel="";
+        eMail="";
+    }
+
     public void setId(int id) {
         this.id = id;
     }

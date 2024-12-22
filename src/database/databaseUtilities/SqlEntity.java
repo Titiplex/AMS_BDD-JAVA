@@ -23,6 +23,11 @@ public abstract class SqlEntity {
     protected static String tableName = null;
     private static boolean hashmapInitialized = false;
 
+    //nécessaire pour avoir un constructeur sans argument, pour créer un objet avant de lui attribuer des valeurs
+    protected SqlEntity(){
+        values = "";
+    }
+
     protected SqlEntity(String tableName) {
         if (SqlEntity.tableName == null) {
             SqlEntity.tableName = tableName;

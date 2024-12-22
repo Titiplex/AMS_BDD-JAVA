@@ -12,6 +12,15 @@ public class Vente extends SqlEntity {
     private LocalDate dateAchat;
     private float quantity;
 
+    public Vente() {
+        super();
+        id=0;
+        idLotAchat=0;
+        prixDuMoment=0;
+        dateAchat=LocalDate.now();
+        quantity=0;
+    }
+
     public Vente(int id, int idLotAchat, float prixDuMoment, LocalDate dateVente, float quantity) {
         super("ams_vente");
         this.id = id;

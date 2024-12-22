@@ -14,6 +14,17 @@ public class Contrat extends SqlEntity {
     private LocalDate dateFin;
     private float prixFixe;
 
+    public Contrat(){
+        super();
+        id=0;
+        idProduit=0;
+        numSiret=0;
+        quantiteMin=0;
+        dateDebut=null;
+        dateFin=null;
+        prixFixe=0;
+    }
+
     public Contrat(int id, int numSiret, int idProduit, float quantiteMin, LocalDate dateDebut, LocalDate dateFin, float prixFixe) {
         super("ams_contrat");
         this.id = id;
