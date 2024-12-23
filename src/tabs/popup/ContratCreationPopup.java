@@ -7,6 +7,8 @@ import entities.Contrat;
 import entities.Fournisseur;
 import entities.Produit;
 import exceptions.EmptyFieldException;
+import exceptions.entityAttributesExceptions.PastDateException;
+import exceptions.entityAttributesExceptions.UnorderedDatesException;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -20,7 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ContratCreationPopup {
-    public ContratCreationPopup() throws EmptyFieldException {
+    public ContratCreationPopup() throws EmptyFieldException, PastDateException, UnorderedDatesException {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -95,9 +97,14 @@ public class ContratCreationPopup {
             int numSiret = fournisseurComboBox.getValue().getNumSiret();
             int idProduit = produitComboBox.getValue().getId();
 
-            if (quantiteMin.isEmpty() || prixFixe.isEmpty() || startDatePicker.getValue() == null || endDatePicker.getValue() == null || numSiret == 0 || idProduit == 0) {
+            // exceptions
+            if (quantiteMin.isEmpty() || prixFixe.isEmpty() || startDate == null || endDate == null || numSiret == 0 || idProduit == 0) {
                 throw new EmptyFieldException("Creation contact");
             }
+
+            if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now())) throw new PastDateException();
+
+            if (startDate.isAfter(endDate)) throw new UnorderedDatesException();
 
             // Logique pour ajouter le contact à la base de données (ou la liste)
             Contrat newContrat = new Contrat(01, numSiret, idProduit, Integer.parseInt(quantiteMin), startDate, endDate, Float.parseFloat(prixFixe));

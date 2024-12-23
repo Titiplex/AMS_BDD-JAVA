@@ -101,8 +101,8 @@ public class TabVentes implements TabTemplate {
         TableColumn<Vente, Float> column3 = new TableColumn<>("Quantité");
         column3.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQuantity()));
 
-        TableColumn<Vente, Float> column4 = new TableColumn<>("Prix unitaire sur le moment");
-        column4.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getPrixDuMoment()));
+        TableColumn<Vente, String> column4 = new TableColumn<>("Prix unitaire sur le moment");
+        column4.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("%.2f", cellData.getValue().getPrixDuMoment())));
 
         tableView.getColumns().addAll(column1, column2, column3, column4);
 
@@ -126,5 +126,6 @@ public class TabVentes implements TabTemplate {
         venteDAO.insertInTable(new Vente(1, lot.getId(), produit.getPrixVenteActuel(), date, quantite));
         Main.getInstance().recreateTab("Ventes");
         Main.getInstance().recreateTab("Resultats");
+        Main.getInstance().recreateTab("Stock");
     }
 }

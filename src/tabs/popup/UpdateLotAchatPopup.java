@@ -3,6 +3,8 @@ package tabs.popup;
 import database.dataAccessObject.LotAchatDAO;
 import entities.LotAchat;
 import exceptions.EmptyFieldException;
+import exceptions.entityAttributesExceptions.PastDateException;
+import exceptions.entityAttributesExceptions.UnorderedDatesException;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -17,7 +19,7 @@ import main.Main;
 import java.time.LocalDate;
 
 public class UpdateLotAchatPopup {
-    public UpdateLotAchatPopup(LotAchat lot) throws EmptyFieldException {
+    public UpdateLotAchatPopup(LotAchat lot) throws EmptyFieldException, PastDateException, UnorderedDatesException {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -50,6 +52,10 @@ public class UpdateLotAchatPopup {
             if (quantityString.isEmpty() || buyingDatePicker.getValue() == null || peremptionDatePicker.getValue() == null || quantity == 0) {
                 throw new EmptyFieldException("Mis à jour lot");
             }
+
+            if (buyingDate.isBefore(LocalDate.now()) || peremptionDate.isBefore(LocalDate.now())) throw new PastDateException();
+
+            if (buyingDate.isAfter(peremptionDate)) throw new UnorderedDatesException();
 
             // ajouter
             lot.setDateAchat(buyingDate);

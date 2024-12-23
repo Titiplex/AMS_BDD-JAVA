@@ -68,7 +68,7 @@ public class VenteDAO implements DAOInterface<Vente> {
 
     @Override
     public void insertInTable(Vente entity) {
-        String query = "INSERT INTO ams_vente (idlotachat, prixdumoment, quantite, datevente) VALUES " + entity.getValues() + " RETURNING idvente";
+        String query = "INSERT INTO ams_vente (idlotachat, prixdumoment, datevente, quantite) VALUES " + entity.getValues() + " RETURNING idvente";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);

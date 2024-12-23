@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import main.Main;
+import tabs.popup.ProduitModificationPopup;
 import tabs.tabUtilities.TabTemplate;
 
 import java.util.Comparator;
@@ -45,16 +46,16 @@ public class TabProduits implements TabTemplate {
         TableColumn<Produit, String> nomColumn = new TableColumn<>("Nom");
         nomColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNom()));
 
-        TableColumn<Produit, Double> prixMoyenColumn = new TableColumn<>("Prix d'achat unitaire moyen");
+        TableColumn<Produit, String> prixMoyenColumn = new TableColumn<>("Prix d'achat unitaire moyen");
         prixMoyenColumn.setCellValueFactory(data ->
-                new SimpleObjectProperty<>(calculatePrixMoyen(data.getValue().getId()))
+                new SimpleStringProperty(String.format("%.2f", calculatePrixMoyen(data.getValue().getId())))
         );
 
-        TableColumn<Produit, Float> prixVenteColumn = new TableColumn<>("Prix de vente unitaire");
-        prixVenteColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPrixVenteActuel()));
+        TableColumn<Produit, String> prixVenteColumn = new TableColumn<>("Prix de vente unitaire");
+        prixVenteColumn.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.2f", data.getValue().getPrixVenteActuel())));
 
-        TableColumn<Produit, Void> actionColumn = new TableColumn<>("Actions");
-        actionColumn.setCellFactory(param -> new TableCell<>() {
+        TableColumn<Produit, Void> afficherColumn = new TableColumn<>("Afficher le produit");
+        afficherColumn.setCellFactory(param -> new TableCell<>() {
             private final Button afficherButton = new Button("Afficher");
 
             {
@@ -75,7 +76,28 @@ public class TabProduits implements TabTemplate {
             }
         });
 
-        tableView.getColumns().addAll(idColumn, nomColumn, prixMoyenColumn, prixVenteColumn, actionColumn);
+        TableColumn<Produit, Void> modifierColumn = new TableColumn<>("Modifier");
+        modifierColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button modifierButton = new Button("Modifier");
+
+            {
+                modifierButton.setOnAction(event -> {
+                    new ProduitModificationPopup(getTableView().getItems().get(getIndex()));
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(modifierButton);
+                }
+            }
+        });
+
+        tableView.getColumns().addAll(idColumn, nomColumn, prixMoyenColumn, prixVenteColumn, afficherColumn, modifierColumn);
         tableView.getItems().addAll(produitList);
 
         // ajout produit
@@ -88,7 +110,7 @@ public class TabProduits implements TabTemplate {
         TextField description = new TextField();
         description.setPromptText("Description");
         TextField mesure = new TextField();
-        mesure.setPromptText("Mesure (U ou kg)");
+        mesure.setPromptText("Mesure (U / kg / L)");
         TextField prixActuel = new TextField();
         prixActuel.setPromptText("Prix de vente actuel");
 
@@ -156,7 +178,7 @@ public class TabProduits implements TabTemplate {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Détails du produit");
         alert.setHeaderText(produit.getNom());
-        alert.setContentText("Description : " + produit.getDescription() + "\nCatégorie : " + categorie.getCategorie());
+        alert.setContentText("Description : " + produit.getDescription() + "\nCatégorie : " + categorie.getCategorie() + "\nMesure : " + produit.getMesure());
         alert.showAndWait();
     }
 

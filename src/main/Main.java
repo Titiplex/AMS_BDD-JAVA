@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tabs.*;
@@ -54,12 +55,17 @@ public class Main extends Application {
 
         // on ajoute à la scène finale
         VBox vbox = new VBox(menuBar, tabPane);
+        VBox.setVgrow(tabPane, Priority.ALWAYS);
         Scene scene = new Scene(vbox, 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     private void setTabPane() {
+        // on récupère le Tab qui sur lequel on était avant reload
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        String selectedTabName = (selectedTab != null) ? selectedTab.getText() : null;
+
         // on supprime tout ce qui a déjà été fait
         tabPane.getTabs().clear();
         tabs.clear();
@@ -78,7 +84,10 @@ public class Main extends Application {
         addTab("Gestion", gestion);
         addTab("Ventes", ventes);
 
-        // tabPane.getTabs().addAll(resultats, commandes, produits, stock, gestion, ventes);
+        // on replace sur le bon tab
+        if (selectedTabName != null && tabs.containsKey(selectedTabName)) {
+            tabPane.getSelectionModel().select(tabs.get(selectedTabName));
+        }
     }
 
     private void addTab(String name, Tab tab) {
@@ -89,7 +98,7 @@ public class Main extends Application {
     /**
      * Recreates a specified tab in the associated tab pane. The tab is replaced with a new instance based on its name.
      * This method updates both the tab pane and the internal map containing the tabs.
-     * (comment generated automatically by AI)
+     * (comment generated automatically)
      *
      * @param tabName the name of the tab to recreate. Supported names are:
      *                "Resultats", "Commandes", "Produits", "Stock", "Gestion", and "Ventes".
@@ -97,6 +106,10 @@ public class Main extends Application {
      */
     public void recreateTab(String tabName) {
         if (!tabs.containsKey(tabName)) return; // on verif si le tab est supporté
+
+        // on récupère le tab sur lequel on était
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        String selectedTabName = (selectedTab != null) ? selectedTab.getText() : null;
 
         int index = tabPane.getTabs().indexOf(tabs.get(tabName)); // index du tab
         Tab newTab = switch (tabName) {
@@ -113,6 +126,11 @@ public class Main extends Application {
             // remplace et maj
             tabPane.getTabs().set(index, newTab);
             tabs.put(tabName, newTab);
+
+            // on replace le curseur sur le bon tab
+            if (selectedTabName != null && selectedTabName.equals(tabName)) {
+                tabPane.getSelectionModel().select(newTab);
+            }
         }
     }
 }

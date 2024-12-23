@@ -8,10 +8,9 @@ import entities.Contrat;
 import entities.LotAchat;
 import entities.Produit;
 import entities.Vente;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import tabs.tabUtilities.TabTemplate;
@@ -66,8 +65,8 @@ public class TabResultats implements TabTemplate {
         root.setStyle("-fx-padding: 10;");
 
         // on créé une liste de produits en string
-        String[][] topDaySalesString = new String[10][3];
-        String[][] topMonthSalesString = new String[10][3];
+        TableView<String[]> topDaySales = createTopSalesList();
+        TableView<String[]> topMonthSales = createTopSalesList();
 
         double totalDayBenefices = 0, totalMonthBenefices = 0, totalDaySales = 0, totalMonthSales = 0;
 
@@ -85,64 +84,70 @@ public class TabResultats implements TabTemplate {
             double benefice = getBenefice(tempo, tempoContrat);
 
             if (dateAchat.equals(today) && itJour < 10) {
-                topDaySalesString[i][0] = tempoProduit.getNom();
-                topDaySalesString[i][1] = tempo.getQuantity() + " unités";
-                topDaySalesString[i][2] = benefice + "€";
+                topDaySales.getItems().add(new String[]{
+                        tempoProduit.getNom(),
+                        tempo.getQuantity() + "",
+                        (double) Math.round(benefice * 100) / 100 + "",
+                });
                 itJour++;
                 totalDayBenefices += benefice;
                 totalDaySales += (tempo.getQuantity() * tempo.getPrixDuMoment());
             }
             if (dateAchat.getMonth() == today.getMonth() && dateAchat.getYear() == today.getYear() && itMois < 10) {
-                topMonthSalesString[i][0] = tempoProduit.getNom();
-                topMonthSalesString[i][1] = tempo.getQuantity() + " unités";
-                topMonthSalesString[i][2] = benefice + "€";
+                topMonthSales.getItems().add(new String[]{
+                        tempoProduit.getNom(),
+                        tempo.getQuantity() + "",
+                        (double) Math.round(benefice * 100) / 100 + ""
+                });
                 itMois++;
                 totalMonthBenefices += benefice;
                 totalMonthSales += (tempo.getQuantity() * tempo.getPrixDuMoment());
             }
         }
-        VBox dayTopSalesList = createTopSalesList(topDaySalesString);
-        VBox monthTopSalesList = createTopSalesList(topMonthSalesString);
 
         // jour
         VBox dayColumn = new VBox(10);
         Label dayTitle = new Label("Données du jour");
         dayTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-        Label dayTotalSales = new Label("Total des ventes : " + totalDaySales);
-        Label dayTotalBenef = new Label("Bénéfices : " + totalDayBenefices);
+        Label dayTotalSales = new Label("Total des ventes : " + String.format("%.2f", totalDaySales) + "€");
+        Label dayTotalBenef = new Label("Bénéfices : " + String.format("%.2f", totalDayBenefices) + "€");
         Label dayTopSalesLabel = new Label("Top 10 ventes (Jour)");
         dayTopSalesLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
-        dayColumn.getChildren().addAll(dayTitle, dayTotalSales, dayTotalBenef, dayTopSalesLabel, dayTopSalesList);
+        dayColumn.getChildren().addAll(dayTitle, dayTotalSales, dayTotalBenef, dayTopSalesLabel, topDaySales);
 
         // mois
         VBox monthColumn = new VBox(10);
         Label monthTitle = new Label("Données du mois");
         monthTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-        Label monthTotalSales = new Label("Total des ventes : " + totalMonthSales);
-        Label monthTotalBenef = new Label("Bénéfices : " + totalMonthBenefices);
+        Label monthTotalSales = new Label("Total des ventes : " + String.format("%.2f", totalMonthSales) + "€");
+        Label monthTotalBenef = new Label("Bénéfices : " + String.format("%.2f", totalMonthBenefices) + "€");
         Label monthTopSalesLabel = new Label("Top 10 ventes (Mois)");
         monthTopSalesLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
-        monthColumn.getChildren().addAll(monthTitle, monthTotalSales, monthTotalBenef, monthTopSalesLabel, monthTopSalesList);
+        monthColumn.getChildren().addAll(monthTitle, monthTotalSales, monthTotalBenef, monthTopSalesLabel, topMonthSales);
 
         root.getChildren().addAll(dayColumn, monthColumn);
 
         return root;
     }
 
-    private VBox createTopSalesList(String[][] salesData) {
-        VBox listContainer = new VBox(5);
-        for (String[] sale : salesData) {
-            HBox row = new HBox(20);
-            row.getChildren().addAll(
-                    new Label(sale[0]), // nom
-                    new Label(sale[1]), // qtté
-                    new Label(sale[2])  // benef
-            );
-            listContainer.getChildren().add(row);
-        }
-        return listContainer;
+    private TableView<String[]> createTopSalesList() {
+
+        TableView<String[]> tableView = new TableView<>();
+
+        TableColumn<String[], String> nomCol = new TableColumn<>("Nom");
+        nomCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
+
+        TableColumn<String[], String> quantityCol = new TableColumn<>("Quantité");
+        quantityCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
+
+        TableColumn<String[], String> benefCol = new TableColumn<>("Bénéfices");
+        benefCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[2]));
+
+        tableView.getColumns().addAll(nomCol, quantityCol, benefCol);
+
+        return tableView;
     }
 
     private double getBenefice(Vente vente, Contrat contrat) {

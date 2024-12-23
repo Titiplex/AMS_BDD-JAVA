@@ -32,7 +32,7 @@ public class TabCommandes implements TabTemplate {
 
     @Override
     public ScrollPane createTab() throws EmptyFieldException {
-        VBox root = new VBox(20); // Conteneur principal vertical
+        VBox root = new VBox(20); // boite principale
         root.setStyle("-fx-padding: 10;");
 
         Label title = new Label("Liste des commandes du jour");
@@ -59,15 +59,16 @@ public class TabCommandes implements TabTemplate {
                                         .getIdProduit())
                         .getNom()));
 
-        TableColumn<LotAchat, Float> quantityColumn = new TableColumn<>("Quantité");
-        quantityColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQuantite()));
+        TableColumn<LotAchat, String> quantityColumn = new TableColumn<>("Quantité");
+        quantityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("%.2f", cellData.getValue().getQuantite())));
 
-        TableColumn<LotAchat, Float> prixTotalColumn = new TableColumn<>("Prix total");
-        prixTotalColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(
-                produitDAO.getById(
-                                contratDAO.getById(cellData.getValue().getContratId())
-                                        .getIdProduit())
-                        .getPrixVenteActuel() * cellData.getValue().getQuantite()));
+        TableColumn<LotAchat, String> prixTotalColumn = new TableColumn<>("Prix total");
+        prixTotalColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+                String.format("%.2f",
+                        produitDAO.getById(
+                                        contratDAO.getById(cellData.getValue().getContratId())
+                                                .getIdProduit())
+                                .getPrixVenteActuel() * cellData.getValue().getQuantite())));
 
         TableColumn<LotAchat, String> fournisseurColumn = new TableColumn<>("Fournisseur");
         fournisseurColumn.setCellValueFactory(cellData -> new SimpleStringProperty(

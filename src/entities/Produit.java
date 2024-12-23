@@ -46,7 +46,7 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
         Produit produit = new Produit(this.getId(), this.getPrixVenteActuel(), this.getNom(), this.getDescription(), this.getMesure());
     }
 
-    private void setMesure(String mesure) {
+    public void setMesure(String mesure) {
         try {
             validateMesure(mesure);
             this.mesure = mesure;
@@ -67,7 +67,7 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
         return prixVenteActuel;
     }
 
-    private void setPrixVenteActuel(float prixVenteActuel) {
+    public void setPrixVenteActuel(float prixVenteActuel) {
         this.prixVenteActuel = prixVenteActuel;
     }
 
@@ -75,7 +75,7 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
         return nom;
     }
 
-    private void setNom(String nom) {
+    public void setNom(String nom) {
         try {
             validateProductName(nom);
             this.nom = nom;
@@ -88,7 +88,7 @@ public class Produit extends SqlEntity implements SetterInterface<Produit> {
         return description;
     }
 
-    private void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

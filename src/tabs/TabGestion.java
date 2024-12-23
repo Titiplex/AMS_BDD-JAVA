@@ -9,6 +9,7 @@ import entities.Contrat;
 import entities.Fournisseur;
 import entities.Produit;
 import exceptions.EmptyFieldException;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -16,6 +17,7 @@ import javafx.util.StringConverter;
 import main.Main;
 import tabs.popup.ContactCreationPopup;
 import tabs.popup.ContratCreationPopup;
+import tabs.popup.FournisseurModificationPopup;
 import tabs.tabUtilities.TabTemplate;
 
 import java.util.ArrayList;
@@ -52,9 +54,14 @@ public class TabGestion implements TabTemplate {
         });
 
         VBox fournisseurInfoBox = new VBox(10);
-        final VBox[] contactsBox = {new VBox(10)};
+        TableView<String[]> contactsTable = createTableList("Nom", "Fonction", "Email", "Téléphone");
+        TableView<String[]> contratsTable = createTableList("Dates", "Nom Produit", "Prix fixe", "Quantité Min");
+
         final VBox[] contratsBox = {new VBox(10)};
+        final VBox[] contactsBox = {new VBox(10)};
         final VBox[] produitsBox = {new VBox(10)};
+        final Button[] updateFournisseurButton = new Button[1];
+
         fournisseurInfoBox.setStyle("-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1;");
         Label fournisseurInfoTitle = new Label("Information sur le fournisseur");
         fournisseurInfoTitle.setStyle("-fx-font-weight: bold;");
@@ -67,6 +74,11 @@ public class TabGestion implements TabTemplate {
 
         fournisseurComboBox.setOnAction(e -> {
             Fournisseur fournisseur = fournisseurComboBox.getValue();
+
+            updateFournisseurButton[0] = new Button("Modifier");
+            updateFournisseurButton[0].setOnAction(a -> new FournisseurModificationPopup(fournisseur));
+            fournisseurInfoBox.getChildren().add(updateFournisseurButton[0]);
+
             fournisseurName.setText("Nom de la société : " + fournisseur.getNomSociete());
             fournisseurSiret.setText("Numéro SIRET : " + fournisseur.getNumSiret());
             fournisseurAdresse.setText("Adresse : " + fournisseur.getAdresse());
@@ -83,11 +95,15 @@ public class TabGestion implements TabTemplate {
 
             contactsBox[0].getChildren().add(contactsTitle);
             for (Contact contact : listContacts) {
-                // A FAIRE ATTENTION, BOX AVEC LES INFOS EN POPUP ?
-                HBox hBox = new HBox(20);
-                hBox.getChildren().add(new Label(contact.getNom()));
-                contactsBox[0].getChildren().add(hBox);
+                contactsTable.getItems().add(new String[] {
+                        contact.getNom() + ", " + contact.getPrenom(),
+                        contact.getFonction(),
+                        contact.geteMail(),
+                        contact.getNumTel()
+                });
             }
+
+            contactsBox[0].getChildren().add(contactsTable);
 
             Button addContactButton = new Button("Ajouter un contact");
             addContactButton.setOnAction(a -> {
@@ -119,16 +135,17 @@ public class TabGestion implements TabTemplate {
 
             contratsBox[0].getChildren().add(contratsTitle);
             for (Contrat contrat : contratList) {
-                HBox hBox = new HBox(20);
-                hBox.getChildren().addAll(new Label(contrat.getDateDebut().toString()),
-                        new Label(contrat.getDateFin().toString()),
-                        new Label(produitDAO.getById(contrat.getIdProduit()).getNom()),
-                        new Label("" + contrat.getPrixFixe()),
-                        new Label("" + contrat.getQuantiteMin()));
+                contratsTable.getItems().add(new String[] {
+                        contrat.getDateDebut().toString() + "/" + contrat.getDateFin().toString(),
+                        produitDAO.getById(contrat.getIdProduit()).getNom(),
+                        "" + contrat.getPrixFixe(),
+                        "" + contrat.getQuantiteMin()
+                });
 
-                contratsBox[0].getChildren().add(hBox);
                 listProduits.add(produitDAO.getById(contrat.getIdProduit()));
             }
+
+            contratsBox[0].getChildren().add(contratsTable);
 
             Button addContratButton = new Button("Ajouter un contrat");
             addContratButton.setOnAction(b -> {
@@ -138,14 +155,19 @@ public class TabGestion implements TabTemplate {
 
             contratsBox[0].getChildren().add(addContratButton);
 
+            TableView<String> produitTable = new TableView<>();
+            TableColumn<String, String> produitName = new TableColumn<>("Nom");
+            produitName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+            produitTable.getColumns().add(produitName);
+
             // on update la vbox des produits
             for (Produit produit : listProduits) {
-                HBox hBox = new HBox(20);
-                hBox.getChildren().addAll(new Label(produit.getNom()));
-                produitsBox[0].getChildren().add(hBox);
+                produitTable.getItems().add(produit.getNom());
             }
 
-            root.getChildren().addAll(contactsBox[0], produitsBox[0], contratsBox[0]);
+            produitsBox[0].getChildren().add(produitTable);
+
+            root.getChildren().addAll(contactsBox[0], contratsBox[0], produitsBox[0]);
         });
 
         fournisseurInfoBox.getChildren().addAll(fournisseurInfoTitle, fournisseurName, fournisseurSiret, fournisseurAdresse, fournisseurEmail);
@@ -192,5 +214,26 @@ public class TabGestion implements TabTemplate {
                 email
         ));
         Main.getInstance().recreateTab("Gestion");
+    }
+
+    private TableView<String[]> createTableList(String col1, String col2, String col3, String col4) {
+
+        TableView<String[]> tableView = new TableView<>();
+
+        TableColumn<String[], String> tableCol1 = new TableColumn<>(col1);
+        tableCol1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
+
+        TableColumn<String[], String> tableCol2 = new TableColumn<>(col2);
+        tableCol2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
+
+        TableColumn<String[], String> tableCol3 = new TableColumn<>(col3);
+        tableCol3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[2]));
+
+        TableColumn<String[], String> tableCol4 = new TableColumn<>(col4);
+        tableCol4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[3]));
+
+        tableView.getColumns().addAll(tableCol1, tableCol2, tableCol3, tableCol4);
+
+        return tableView;
     }
 }
