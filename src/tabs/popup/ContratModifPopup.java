@@ -21,8 +21,8 @@ import main.Main;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ContratCreationPopup {
-    public ContratCreationPopup(Fournisseur fournisseur) throws EmptyFieldException, PastDateException, UnorderedDatesException {
+public class ContratModifPopup {
+    public ContratModifPopup(Contrat contrat) throws EmptyFieldException, PastDateException, UnorderedDatesException {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -34,16 +34,16 @@ public class ContratCreationPopup {
 
         // Champs de saisie pour le contact
         Label startDateLabel = new Label("Date de début :");
-        DatePicker startDatePicker = new DatePicker();
+        DatePicker startDatePicker = new DatePicker(contrat.getDateDebut());
 
         Label endDateLabel = new Label("Date de fin :");
-        DatePicker endDatePicker = new DatePicker();
+        DatePicker endDatePicker = new DatePicker(contrat.getDateFin());
 
         Label quantiteMinLabel = new Label("Quantité minimale :");
-        TextField quantiteMinField = new TextField();
+        TextField quantiteMinField = new TextField(contrat.getQuantiteMin() + "");
 
         Label prixFixeLabel = new Label("Prix fixe :");
-        TextField prixFixeField = new TextField();
+        TextField prixFixeField = new TextField(contrat.getPrixFixe() + "");
 
         // on recup les produits
         ProduitDAO produitDao = new ProduitDAO();
@@ -85,10 +85,10 @@ public class ContratCreationPopup {
             if (startDate.isAfter(endDate)) throw new UnorderedDatesException();
 
             // Logique pour ajouter le contact à la base de données (ou la liste)
-            Contrat newContrat = new Contrat(01, fournisseur.getNumSiret(), idProduit, Integer.parseInt(quantiteMin), startDate, endDate, Float.parseFloat(prixFixe));
+            Contrat newContrat = new Contrat(contrat.getId(), contrat.getnumSiret(), idProduit, Integer.parseInt(quantiteMin), startDate, endDate, Float.parseFloat(prixFixe));
 
             ContratDAO contratDAO = new ContratDAO();
-            contratDAO.insertInTable(newContrat);
+            contratDAO.modifyEntity(newContrat);
 
             popupStage.close(); // Fermer la fenêtre popup
             Main.getInstance().recreateTab("Gestion");

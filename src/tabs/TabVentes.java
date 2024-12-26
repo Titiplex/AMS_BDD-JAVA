@@ -8,6 +8,7 @@ import entities.LotAchat;
 import entities.Produit;
 import entities.Vente;
 import exceptions.EmptyFieldException;
+import exceptions.ProductShortage;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -23,6 +24,8 @@ import tabs.tabUtilities.TabTemplate;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+
+import static tabs.tabUtilities.TabUtilitiesMethodes.getRemainingLot;
 
 public class TabVentes implements TabTemplate {
 
@@ -74,8 +77,23 @@ public class TabVentes implements TabTemplate {
 
             List<LotAchat> listLotsProduit = lotAchatDAO.listAllFromParameter(produit);
             listLotsProduit.sort(Comparator.comparing(lot -> LocalDate.parse("" + lot.getDatePeremption())));
+            double remainingQuantity = 0;
+            for (LotAchat lot : listLotsProduit ) {
+                remainingQuantity += getRemainingLot(lot);
+            }
+            float askedQuantity = Float.parseFloat(quantiteField.getText());
+            if (remainingQuantity < askedQuantity) throw new ProductShortage(remainingQuantity + "", produit.getNom());
 
-            createVente(listLotsProduit.getFirst(), produit, LocalDate.now(), Integer.parseInt(quantiteField.getText()));
+            int j = 0;
+            while (askedQuantity > 0 && j < listLotsProduit.size()) {
+                double remaining = getRemainingLot(listLotsProduit.get(j));
+                double i;
+                if (remaining >= askedQuantity) i = askedQuantity;
+                else i = remaining;
+                if (i != 0) createVente(listLotsProduit.get(j), produit, LocalDate.now(), (float) i);
+                j++;
+                askedQuantity -= (float) i;
+            }
         });
 
         formBox.getChildren().addAll(produitLabel, produitComboBox, quantiteLabel, quantiteField, addVenteButton);
@@ -121,7 +139,7 @@ public class TabVentes implements TabTemplate {
         return root;
     }
 
-    private void createVente(LotAchat lot, Produit produit, LocalDate date, int quantite) {
+    private void createVente(LotAchat lot, Produit produit, LocalDate date, float quantite) {
         VenteDAO venteDAO = new VenteDAO();
         venteDAO.insertInTable(new Vente(1, lot.getId(), produit.getPrixVenteActuel(), date, quantite));
         Main.getInstance().recreateTab("Ventes");

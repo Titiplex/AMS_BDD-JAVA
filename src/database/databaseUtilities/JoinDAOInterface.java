@@ -4,20 +4,18 @@ import java.util.List;
 
 public interface JoinDAOInterface<U, A> extends DAOInterface<U> {
     /**
-     * Retrieves a list of all primary entities associated with the given join entity.
-     * (comment generated with AI)
+     * Lister toutes les entités depuis un paramètre (ex : les join en sql)
      *
-     * @param joinEntity the join entity used to filter and retrieve the associated primary entities
-     * @return a list of primary entities associated with the specified join entity
+     * @param joinEntity
+     * @return
      */
     List<U> listAllFromParameter(A joinEntity);
 
     /**
-     * Inserts a primary entity into a database table along with an associated join entity.
-     * (comment generated with AI)
+     * Insérer une entité en join
      *
-     * @param entity     the primary entity to be inserted into the database table
-     * @param joinEntity the associated entity that defines the join relationship with the primary entity
+     * @param entity
+     * @param joinEntity
      */
     void insertInTable(U entity, A joinEntity);
 }

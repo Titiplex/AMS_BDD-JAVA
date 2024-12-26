@@ -59,12 +59,12 @@ public class ContratDAO implements DAOInterface<Contrat> {
 
     @Override
     public void modifyEntity(Contrat entity) {
-        String query = "UPDATE ams_lotachat SET idfournisseur = " + entity.getnumSiret()
-                + " AND idproduit = " + entity.getIdProduit()
-                + " AND quantitemin" + entity.getQuantiteMin()
-                + " AND datedebut = '" + entity.getDateDebut() + "'"
-                + " AND datefin = '" + entity.getDateFin() + "'"
-                + "AND prixfixe = " + entity.getPrixFixe()
+        String query = "UPDATE ams_contrat SET idfournisseur = " + entity.getnumSiret()
+                + ", idproduit = " + entity.getIdProduit()
+                + ", quantitemin" + entity.getQuantiteMin()
+                + ", datedebut = '" + entity.getDateDebut() + "'"
+                + ", datefin = '" + entity.getDateFin() + "'"
+                + ", prixfixe = " + entity.getPrixFixe()
                 + " WHERE idcontrat = " + entity.getId();
         try {
             Connection conn = ConnectDatabase.getConnection();

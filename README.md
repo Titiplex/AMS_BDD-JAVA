@@ -78,6 +78,13 @@ Créer la base de donnée avec le fichier .sql,
 
 Vérifier les dépendances du projet (javafx, jdbc/postgresql),
 
+Ajouter dans le dossier parent un fichier .env avec les trois variables suivantes :
+```
+USER="uapvXXXXXXX"
+URL="jdbc:postgresql://pedago.univ-avignon.fr:5432/etd"
+PASSWORD="Votre Mot de Passe"
+```
+
 ## **Utilisation**
 
 Pour lancer l'application :

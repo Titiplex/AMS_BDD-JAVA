@@ -82,10 +82,10 @@ public class VenteDAO implements DAOInterface<Vente> {
 
     @Override
     public void modifyEntity(Vente entity) {
-        String query = "UPDATE ams_lotachat SET idvente = " + entity.getIdLotAchat()
-                + " AND quantite = " + entity.getQuantity()
-                + " AND datevente = '" + entity.getDateAchat() + "'"
-                + " AND prixdumoment = " + entity.getPrixDuMoment()
+        String query = "UPDATE ams_contrat SET idvente = " + entity.getIdLotAchat()
+                + ", quantite = " + entity.getQuantity()
+                + ", datevente = '" + entity.getDateAchat() + "'"
+                + ", prixdumoment = " + entity.getPrixDuMoment()
                 + " WHERE idvente = " + entity.getId();
         try {
             Connection conn = ConnectDatabase.getConnection();

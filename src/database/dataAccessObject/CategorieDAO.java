@@ -55,8 +55,8 @@ public class CategorieDAO implements DAOInterface<Categorie> {
 
     @Override
     public void modifyEntity(Categorie entity) {
-        String query = "UPDATE ams_lotachat SET categorie = " + entity.getCategorie()
-                + "WHERE idproduit = " + this.temporaryID + " AND categorie = " + entity.getCategorie();
+        String query = "UPDATE ams_produit_categorie SET categorie = '" + entity.getCategorie()
+                + "' WHERE idproduit = " + this.temporaryID + " AND categorie = '" + entity.getCategorie() + "'";
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);

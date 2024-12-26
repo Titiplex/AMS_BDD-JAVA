@@ -91,10 +91,10 @@ public class FournisseurDAO implements DAOInterface<Fournisseur> {
 
     @Override
     public void modifyEntity(Fournisseur entity) {
-        String query = "UPDATE ams_lotachat SET numsiret = " + entity.getNumSiret()
-                + " AND adresse = '" + entity.getAdresse() + "'"
-                + " AND nom_societe = '" + entity.getNomSociete() + "'"
-                + " AND email = '" + entity.geteMailPrincipal() + "'"
+        String query = "UPDATE ams_fournisseur SET numsiret = " + entity.getNumSiret()
+                + ", adresse = '" + entity.getAdresse() + "'"
+                + ", nom_societe = '" + entity.getNomSociete() + "'"
+                + ", email = '" + entity.geteMailPrincipal() + "'"
                 + " WHERE numsiret = " + entity.getNumSiret();
         try {
             Connection conn = ConnectDatabase.getConnection();

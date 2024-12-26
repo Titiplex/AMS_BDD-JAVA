@@ -15,13 +15,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import main.Main;
-import tabs.popup.ContactCreationPopup;
-import tabs.popup.ContratCreationPopup;
-import tabs.popup.FournisseurModificationPopup;
+import tabs.popup.*;
 import tabs.tabUtilities.TabTemplate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TabGestion implements TabTemplate {
 
@@ -54,8 +54,8 @@ public class TabGestion implements TabTemplate {
         });
 
         VBox fournisseurInfoBox = new VBox(10);
-        TableView<String[]> contactsTable = createTableList("Nom", "Fonction", "Email", "Téléphone");
-        TableView<String[]> contratsTable = createTableList("Dates", "Nom Produit", "Prix fixe", "Quantité Min");
+        TableView<String[]> contactsTable = createTableList("Id", "Nom", "Fonction", "Email", "Téléphone", "contact");
+        TableView<String[]> contratsTable = createTableList("Id", "Dates", "Nom Produit", "Prix fixe", "Quantité Min", "contrat");
 
         final VBox[] contratsBox = {new VBox(10)};
         final VBox[] contactsBox = {new VBox(10)};
@@ -96,6 +96,7 @@ public class TabGestion implements TabTemplate {
             contactsBox[0].getChildren().add(contactsTitle);
             for (Contact contact : listContacts) {
                 contactsTable.getItems().add(new String[] {
+                        contact.getId() + "",
                         contact.getNom() + ", " + contact.getPrenom(),
                         contact.getFonction(),
                         contact.geteMail(),
@@ -136,6 +137,7 @@ public class TabGestion implements TabTemplate {
             contratsBox[0].getChildren().add(contratsTitle);
             for (Contrat contrat : contratList) {
                 contratsTable.getItems().add(new String[] {
+                        contrat.getId() + "",
                         contrat.getDateDebut().toString() + "/" + contrat.getDateFin().toString(),
                         produitDAO.getById(contrat.getIdProduit()).getNom(),
                         "" + contrat.getPrixFixe(),
@@ -150,7 +152,7 @@ public class TabGestion implements TabTemplate {
             Button addContratButton = new Button("Ajouter un contrat");
             addContratButton.setOnAction(b -> {
                 // popup creation contrat
-                new ContratCreationPopup();
+                new ContratCreationPopup(fournisseur);
             });
 
             contratsBox[0].getChildren().add(addContratButton);
@@ -216,7 +218,7 @@ public class TabGestion implements TabTemplate {
         Main.getInstance().recreateTab("Gestion");
     }
 
-    private TableView<String[]> createTableList(String col1, String col2, String col3, String col4) {
+    private TableView<String[]> createTableList(String col1, String col2, String col3, String col4, String col5, String entity) {
 
         TableView<String[]> tableView = new TableView<>();
 
@@ -232,7 +234,39 @@ public class TabGestion implements TabTemplate {
         TableColumn<String[], String> tableCol4 = new TableColumn<>(col4);
         tableCol4.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[3]));
 
-        tableView.getColumns().addAll(tableCol1, tableCol2, tableCol3, tableCol4);
+        TableColumn<String[], String> tableCol5 = new TableColumn<>(col5);
+        tableCol5.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[4]));
+
+        TableColumn<String[], Void> modifierColumn = new TableColumn<>("Modifier");
+        modifierColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button modifierButton = new Button("Modifier");
+
+            {
+                modifierButton.setOnAction(event -> {
+                    String[] liste = getTableView().getItems().get(getIndex());
+
+                    if (Objects.equals(entity, "contact")) {
+                        ContactDAO contactDAO = new ContactDAO();
+                        new ContactModifPopup(contactDAO.getById(Integer.parseInt(liste[0])));
+                    } else if (Objects.equals(entity, "contrat")) {
+                        ContratDAO contratDAO = new ContratDAO();
+                        new ContratModifPopup(contratDAO.getById(Integer.parseInt(liste[0])));
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(modifierButton);
+                }
+            }
+        });
+
+        tableView.getColumns().addAll(tableCol1, tableCol2, tableCol3, tableCol4, modifierColumn);
 
         return tableView;
     }

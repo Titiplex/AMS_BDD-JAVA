@@ -45,6 +45,7 @@ public class ProduitDAO implements DAOInterface<Produit> {
     @Override
     public void insertInTable(Produit entity) {
         String query = "INSERT INTO ams_produit (nom, prixventeactuel, mesure, description) VALUES " + entity.getValues() + " RETURNING idproduit";
+        System.out.println(query);
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -83,12 +84,12 @@ public class ProduitDAO implements DAOInterface<Produit> {
 
     @Override
     public void modifyEntity(Produit entity) {
-        // TODO gérer erreur
-        String query = "UPDATE ams_lotachat SET nom = '" + entity.getNom() + "'"
-                + " AND description = '" + entity.getDescription() + "'"
-                + " AND mesure = '" + entity.getMesure() + "'"
-                + " AND prixventeactuel = " + entity.getPrixVenteActuel()
+        String query = "UPDATE ams_produit SET nom = '" + entity.getNom() + "',"
+                + " description = '" + entity.getDescription() + "',"
+                + " mesure = '" + entity.getMesure() + "',"
+                + " prixventeactuel = " + entity.getPrixVenteActuel()
                 + " WHERE idproduit = " + entity.getId();
+        System.out.println(query);
         try {
             Connection conn = ConnectDatabase.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);

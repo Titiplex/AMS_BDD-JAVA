@@ -14,31 +14,31 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.Main;
 
-public class ContactCreationPopup {
-    public ContactCreationPopup(Fournisseur fournisseur) throws EmptyFieldException {
+public class ContactModifPopup {
+    public ContactModifPopup(Contact contact) throws EmptyFieldException {
         // fenetre modal
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.setTitle("Ajouter un Contact");
+        popupStage.setTitle("Modifier un Contact");
 
         VBox popupRoot = new VBox(10);
         popupRoot.setStyle("-fx-padding: 15;");
 
         // champs
         Label nameLabel = new Label("Nom :");
-        TextField nameField = new TextField();
+        TextField nameField = new TextField(contact.getNom());
 
         Label firstNameLabel = new Label("Prénom :");
-        TextField firstNameField = new TextField();
+        TextField firstNameField = new TextField(contact.getPrenom());
 
         Label emailLabel = new Label("Email :");
-        TextField emailField = new TextField();
+        TextField emailField = new TextField(contact.geteMail());
 
         Label phoneLabel = new Label("Téléphone :");
-        TextField phoneField = new TextField();
+        TextField phoneField = new TextField(contact.getNumTel());
 
         Label fonctionLabel = new Label("Fonction :");
-        TextField fonctionField = new TextField();
+        TextField fonctionField = new TextField(contact.getFonction());
 
         // enregistrer
         Button saveButton = new Button("Enregistrer");
@@ -54,10 +54,10 @@ public class ContactCreationPopup {
             }
 
             // ajouter
-            Contact newContact = new Contact(01, name, firstName, fonction, phone, email);
+            Contact newContact = new Contact(contact.getId(), name, firstName, fonction, phone, email);
 
             ContactDAO contactDAO = new ContactDAO();
-            contactDAO.insertInTable(newContact, fournisseur);
+            contactDAO.modifyEntity(newContact);
 
             popupStage.close(); // Fermer la fenêtre popup
             Main.getInstance().recreateTab("Gestion");

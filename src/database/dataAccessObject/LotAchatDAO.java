@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static tabs.tabUtilities.TabUtilitiesMethodes.getRemainingLot;
+
 public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
     @Override
@@ -33,7 +35,8 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
                 LocalDate dateAchat = rs.getDate("dateachat").toLocalDate();
                 LocalDate datePeremption = rs.getDate("dateperemption").toLocalDate();
 
-                listLotAchats.add(new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption));
+                LotAchat lot = new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption);
+                if (getRemainingLot(lot) != 0) listLotAchats.add(lot);
             }
 
         } catch (SQLException e) {
@@ -111,9 +114,9 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
 
     @Override
     public List<LotAchat> listAllFromParameter(Produit joinEntity) {
-        List<LotAchat> listlots = new ArrayList<>();
+        List<LotAchat> listLots = new ArrayList<>();
 
-        String query = "SELECT * from ams_lotachat l join ams_contrat c on l.idlotachat = c.idcontrat where idproduit=" + joinEntity.getId();
+        String query = "SELECT * from ams_lotachat l join ams_contrat c on l.idcontrat = c.idcontrat where idproduit=" + joinEntity.getId();
 
         try {
             Connection conn = ConnectDatabase.getConnection();
@@ -128,13 +131,14 @@ public class LotAchatDAO implements JoinDAOInterface<LotAchat, Produit> {
                 LocalDate dateAchat = rs.getDate("dateachat").toLocalDate();
                 LocalDate datePeremption = rs.getDate("dateperemption").toLocalDate();
 
-                listlots.add(new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption));
+                LotAchat lot = new LotAchat(rsId, contratId, quantite, dateAchat, datePeremption);
+                if (getRemainingLot(lot) != 0) listLots.add(lot);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return listlots;
+        return listLots;
     }
 
     @Override

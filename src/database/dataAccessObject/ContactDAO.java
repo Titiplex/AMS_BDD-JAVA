@@ -57,11 +57,11 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
     @Override
     public void modifyEntity(Contact entity) {
-        String query = "UPDATE ams_lotachat SET nom = '" + entity.getNom() + "'"
-                + " AND prenom = '" + entity.getPrenom() + "'"
-                + " AND fonction = '" + entity.getFonction() + "'"
-                + " AND tel = '" + entity.getNumTel() + "'"
-                + "AND email = '" + entity.geteMail() + "'"
+        String query = "UPDATE ams_contact SET nom = '" + entity.getNom() + "'"
+                + ", prenom = '" + entity.getPrenom() + "'"
+                + ", fonction = '" + entity.getFonction() + "'"
+                + ", tel = '" + entity.getNumTel() + "'"
+                + ", email = '" + entity.geteMail() + "'"
                 + " WHERE idcontact = " + entity.getId();
         try {
             Connection conn = ConnectDatabase.getConnection();
@@ -74,7 +74,7 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
 
     @Override
     public Contact getById(int id) {
-        String query = "SELECT * FROM Contact WHERE id = " + id;
+        String query = "SELECT * FROM ams_contact WHERE idcontact = " + id;
         Contact contact = null;
         try {
             Connection conn = ConnectDatabase.getConnection();
@@ -82,13 +82,15 @@ public class ContactDAO implements JoinDAOInterface<Contact, Fournisseur> {
             ResultSet rs = stmt.executeQuery();
 
             // on part du principe que les identifiants sont uniques
-            int rsId = rs.getInt("id");
-            String nom = rs.getString("nom");
-            String prenom = rs.getString("prenom");
-            String fonction = rs.getString("fonction");
-            String numTel = rs.getString("numTel");
-            String eMail = rs.getString("eMail");
-            contact = new Contact(rsId, nom, prenom, fonction, numTel, eMail);
+            if (rs.next()) {
+                int rsId = rs.getInt("idcontact");
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                String fonction = rs.getString("fonction");
+                String numTel = rs.getString("tel");
+                String eMail = rs.getString("email");
+                contact = new Contact(rsId, nom, prenom, fonction, numTel, eMail);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

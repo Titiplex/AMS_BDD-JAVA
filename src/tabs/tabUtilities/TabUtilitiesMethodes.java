@@ -16,10 +16,10 @@ public class TabUtilitiesMethodes {
      * @return
      */
     public static double getRemainingLot(LotAchat lot) {
-        if (listVentes == null) {
-            VenteDAO venteDAO = new VenteDAO();
-            listVentes = venteDAO.listAll();
-        }
+
+        VenteDAO venteDAO = new VenteDAO();
+        listVentes = venteDAO.listAll();
+
         double totalNumber = lot.getQuantite();
         for (Vente vente : listVentes) {
             if (vente.getIdLotAchat() == lot.getId()) {

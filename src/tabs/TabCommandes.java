@@ -270,5 +270,6 @@ public class TabCommandes implements TabTemplate {
         lot.setDateAchat(LocalDate.now());
         lotAchatDAO.modifyEntity(lot);
         Main.getInstance().recreateTab("Commandes");
+        Main.getInstance().recreateTab("Stock");
     }
 }
